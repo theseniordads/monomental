@@ -99,7 +99,7 @@ L1414:
 L1454	=	*-4
 L1458:	moveq	#2,d0
 	bsr	L13018
-	set_click	#280-1
+	set_clicks	#280-1
 	wait_until_end_clicks
 	move	#19,click_counter
 	move	#17,d7
@@ -51033,7 +51033,6 @@ codearokie:
 	jsr		depack_pic_to_back
 	wait_until_end_clicks
 	rts
-L170688	=	*-4
 
 codearokie_abort: ds.b	1
 	even
@@ -51106,147 +51105,120 @@ codearokie_pointer:
 	dc.l	codearokie_frame_pointers
 
 codearokie_frame_1:
-	dc.l	L190110
-	ori.b	#19,d0
-	dc.l	L190115
-	ori.b	#19,d5
-	dc.l	L190118
-	dc	8
-	ori.b	#-1,(a3) ;!! #$FFFF.W
-	dc	$FFFF
-	dc	$FFFF
-L189900:dc	19
-codearokie_frame_2:dc.l	L190126
-L189906:ori.b	#19,d0
-L189910:dc.l	L190133
-	ori.b	#19,d7
-	dc.l	L190136
-	dc	9
-	ori.b	#-1,(a3) ;!! #$FFFF.W
-	dc	$FFFF
-	dc	$FFFF
-	dc	19
-codearokie_frame_3:dc.l	L190140
-	ori.b	#19,d0
-	dc.l	L190147
-	ori.b	#19,d7
-	dc.l	L190151
-	dc	10
-	ori.b	#-1,(a3) ;!! #$FFFF.W
-	dc	$FFFF
-	dc	$FFFF
-	dc	19
-codearokie_frame_4:dc.l	L190161
-	ori.b	#39,d0
-	dc.l	L190165
-	ori.b	#19,d4
-	dc	$FFFF
-	dc	$FFFF
-	dc	$FFFF
-	dc	19
-codearokie_frame_5:dc.l	L190176
-	ori.b	#19,d0
-	dc.l	L190183
-	ori.b	#19,d7
-	dc.l	L190190
-	dc	13
-	ori.b	#-1,(a3) ;!! #$FFFF.W
-	dc	$FFFF
-	dc	$FFFF
-	dc	19
-codearokie_frame_6:dc.l	L190197
-L190026:ori.b	#19,d0
-	dc.l	L190203
-	ori.b	#19,d6
-	dc.l	L190209
-	dc	11
-	ori.b	#-1,(a3) ;!! #$FFFF.W
-	dc	$FFFF
-	dc	$FFFF
-	dc	19
-codearokie_frame_7:dc.l	L190213
-	ori.b	#39,d0
-	dc.l	L190218
-	ori.b	#19,d5
-	dc	$FFFF
-	dc	$FFFF
-	dc	$FFFF
-	dc	19
-codearokie_frame_8:dc.l	L190228
-	ori.b	#19,d0
-	dc.l	L190229
-	ori.b	#19,d0
-	dc.l	L190233
-	ori.b	#19,d4
-	dc	$FFFF
-	dc	$FFFF
-	dc	$FFFF
-	dc	19
-L190110:tst	26990(a7)
-	ori	#28160,26223(a1)
-L190115	=	*-5
-L190118	=	*-2
-	dc	27755
-	dc	29473
-	move.l	d0,-(a0)
-L190126:dc	19791
-	addq	#3,d5
-	movea.l	a4,a7
-	dc	52
-L190133	=	*-1
-	move.l	d0,d6
-L190136:move.l	0(a7,d3),d2
-L190140:dc	19791
-	addq	#3,d5
-	movea.l	(a7),a7
-	dc	53
-L190147	=	*-1
-	move	43(a4),-(a2)
-L190151	=	*-1
-	movea.l	d1,a4
-	move	17457(a4),-(a4)
-	move	84(a1),d0
-L190161	=	*-1
-	dc	16723
-	dc	35
-L190165	=	*-1
-	movea.l	d4,a2
-	dc	17456
-	dc	13880
-	movea.l	(a7),a7
-	move.l	d0,d6
-L190176:dc	19791
-	addq	#3,d5
-	movea.l	(a7),a7
-	dc	52
-L190183	=	*-1
-	movea.l	d1,a4
-	move	11264(a1),-(a1)
-L190190:move	65(a0,d2.l),-(a0)
-	move	67(a1),d4
-L190197	=	*-1
-	dc	19792
-	movea.l	d2,a7
-	dc	35
-L190203	=	*-1
-	move	44(a7,d3.l),d3
-	ori	#12594,d1
-L190209	=	*-3
-	ori	#21071,d4
-L190213	=	*-3
-	addq.b	#8,d0
-L190218:move	#18002,d6
-	dc	16717
-L190224:dc	17726
-	move	d0,d7
-L190228:ori	#21587,(a2)
-L190229	=	*-3
-	dc	33
-L190233	=	*-1
-	move.l	-(a1),-(a0)
-	move.l	-(a1),-(a0)
-	dc	0
+	dc.l	frame1_text1
+	dc.w	0, 13
+	dc.l	frame1_text2
+	dc.w	5, 13
+	dc.l	frame1_text3
+	dc.w	8, 13
+	dc.l	-1
+	dc.w	-1,13
 
+codearokie_frame_2:
+	dc.l	frame2_text1
+	dc.w	0, 13
+	dc.l	frame2_text2
+	dc.w	7, 13
+	dc.l	frame2_text3
+	dc.w	9, 13
+	dc.l	-1
+	dc.w	-1,13
+
+codearokie_frame_3:
+	dc.l	frame3_text1
+	dc.w	0, $13
+	dc.l	frame3_text2
+	dc.w	7, $13
+	dc.l	frame3_text3
+	dc.w	10, $13
+	dc.l	-1
+	dc.w	-1, $13
+
+codearokie_frame_4:
+	dc.l	frame4_text1
+	dc.w	0, $27
+	dc.l	frame4_text2
+	dc.w	4, $13
+	dc.l	-1
+	dc.w	-1, $13
+
+codearokie_frame_5:
+	dc.l	frame5_text1
+	dc.w	0, $13
+	dc.l	frame5_text2
+	dc.w	7, $13
+	dc.l	frame5_text3
+	dc.w	10, $d
+	dc.l	-1
+	dc.w	-1, $13
+
+codearokie_frame_6:
+	dc.l	frame6_text1
+	dc.w	0, $27
+	dc.l	frame6_text2
+	dc.w	5, $13
+	dc.l 	-1
+	dc.w	-1, $13
+
+codearokie_frame_7:
+	dc.l	frame7_text1
+	dc.w	0, $13
+	dc.l	frame7_text2
+	dc.w	4, $13
+	dc.l	-1
+	dc.w	-1, $13
+
+codearokie_frame_8:
+
+frame1_text1 dc.b 'Join', 0
+	even
+frame1_text2 dc.b 'in', 0
+	even
+frame1_text3 dc.b 'folks!!', 0
+	even
+
+frame2_text1 dc.b 'MOVE.L', 0
+	even
+frame2_text2 dc.b '4,', 0
+	even
+frame2_text3 dc.b '$70', 0
+	even
+
+frame3_text1 dc.b 'MOVE.W', 0
+	even
+frame3_text2 dc.b '55,', 0
+	even
+frame3_text3 dc.b '+(A9,D10)', 0
+	even
+
+frame4_text1 dc.b 'TAS', 0
+	even
+frame4_text2 dc.b '$DD068.W', 0
+	even
+
+frame5_text1 dc.b 'MOVE.w', 0
+	even
+frame5_text2 dc.b '+(A3),', 0
+	even
+frame5_text3 dc.b 'A8', 0
+	even
+
+frame6_text1 dc.b 'CMP.B', 0
+	even
+frame6_text2 dc.b '#678,', 0
+	even
+frame6_text3 dc.b 'A12', 0
+	even
+
+frame7_text1 dc.b 'DROP', 0
+	even
+frame7_text2 dc.b '<<FRAME>>', 0
+	even
+
+frame8_text1 dc.b 'RTS', 0
+	even
+frame8_text2 dc.b '!!!!!', 0
+	even
 
 yogie_baird:
 	movea.l	back,a0
@@ -51396,7 +51368,6 @@ txt_yogie_baird:
 	dc.b ' changes!', 13, 13
 	dc.b '  John "Yogie"', 13
 	dc.b 'BAIRD invents TV!', 0
-L224178:
 
 test_card:
 	movea.l	scratch_screen,a0
@@ -51413,9 +51384,7 @@ test_card:
 	wait_until_end_clicks
 	set_clicks	#159
 	movea.l	scratch_screen,a1
-L224292	=	*-4
 	lea		txt_do_you_remember,a0
-L224302:
 	move	#8,d0
 	move	#200,d1
 	jsr		font_string_mono
