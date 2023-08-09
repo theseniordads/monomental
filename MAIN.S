@@ -493,7 +493,87 @@ bmp_credit_colostomy_bag	equ bmp_credit_dame_vera_lynn+24
 bmp_credit_sd_logo			equ bmp_credit_colostomy_bag+24
 	even
 	
-L125534:movea.l	back,a0
+tridi_donut: 
+	set_clicks	#$95
+	jsr 	sort_screen_pointers
+	move.l 	screen3,a0
+	jsr 	black_screen
+	move.l 	screen3,a1
+	lea 	txt_tridi_donut,a0
+	move	#3,d0
+	move	#150,d1
+	jsr		font_string_mono
+	wait_vbl
+	set_vidaddr screen3
+	lea		pic_donut1,a0
+	jsr		depack_pic_to_back
+	movea.l	back,a0
+	suba.l	#32000,a0
+	jsr		black_screen
+	wait_until_end_clicks
+	moveq	#2,d6
+	movea.l	back,a0
+	suba.l	#32000,a0
+.in_loop:
+	adda	#8000,a0
+	wait_vbl
+	set_vidaddr a0
+	set_clicks 	#80-1
+	wait_until_end_clicks
+	dbf	d6,.in_loop
+	move	#79,click_counter
+	adda	#8000,a0
+	wait_vbl
+	set_vidaddr a0
+	lea		pic_donut2,a0
+	movea.l	front,a1
+	lea		-34(a1),a1
+	jsr		depack
+	movea.l	back,a0
+	adda.l	#32000,a0
+	jsr		black_screen
+	wait_until_end_clicks
+	jsr	swap_screens
+	set_clicks	#640-1
+.anim_loop1:
+	wait_vbl
+	jsr		swap_screens
+	movem.l	d6-d7,-(a7)
+	move	#19,d7
+	subq.l	#1,d7
+.wait_loop1:
+	wait_click
+	dbf	d7,.wait_loop1
+	movem.l	(a7)+,d6-d7
+	tst	click_counter
+	bgt.s	.anim_loop1
+	jsr	L156204
+	movea.l	back,a0
+	move	#3,d7
+.out_loop:
+	wait_vbl
+	set_vidaddr	a0
+	adda	#8000,a0
+	set_clicks	#79
+	wait_until_end_clicks
+	dbf	d7,.out_loop
+	set_clicks	#319
+.anim2_loop:
+	wait_vbl
+	jsr	swap_screens
+	movem.l	d6-d7,-(a7)
+	move	#19,d7
+	subq.l	#1,d7
+.wait_loop:
+	wait_click
+	dbf	d7,.wait_loop
+	movem.l	(a7)+,d6-d7
+	tst		click_counter
+	bgt.s	.anim2_loop
+	rts
+
+L125534:
+	movea.l	back,a0
 	jsr	black_screen
 	movea.l	back,a1
 	lea	L125588,a0
@@ -986,6 +1066,15 @@ swap_screens:
 	set_vidaddr	d0
 	rts
 
+sort_screen_pointers:
+	movem.l	front,d0-d1
+	cmp.l	d0,d1
+	bge.s	.sorted
+	exg	d0,d1
+	movem.l	d0-d1,front
+.sorted
+	rts
+			
 greetings:
 	move	#639,click_counter
 	lea	pic_greetings,a0
@@ -1034,20 +1123,9 @@ pic_donut2:
 	incbin graphics/packed/donut2.pi3
 	even
 
-txt_tridi_donut:addq	#2,28005(a1)
-	movea.l	-(a6),a0
-	ble.s	.exit
-	dc	8308
-	dc	25953
-	btst	d6,-(a0)
-L170652:bsr.s	L170764
-	bcc.s	L170688
-	dc	17487
-	dc	20053
-	addq	#2,(a3)
-	move.l	-(a1),-(a0)
-	move.l	-(a1),-(a0)
-	dc	0
+txt_tridi_donut:
+	dc.b 	'Time for tea', 13
+	dc.b   	' and DONUTS!!!!', 0
 
 codearokie:
 	movea.l	back,a0
