@@ -101,7 +101,7 @@ the_end:
 	wait_until_end_clicks
 	move	#19,click_counter
 	move	#17,d7
-.anim_loop:
+end_anim_loop:
 	movem.l	d7,-(a7)
 	bsr		scroll_starfield
 	bsr		add_bottom_screen_title
@@ -109,7 +109,7 @@ the_end:
 	wait_until_end_clicks
 	move	#19,click_counter
 	movem.l	(a7)+,d7
-	dbf	d7,.anim_loop
+	dbf	d7,end_anim_loop
 	wait_until_end_clicks
 	set_clicks	#320-1
 	movea.l	back,a0
@@ -161,7 +161,8 @@ senior_text_intro:
 .wait:
 	tst		timer.w
 	blt.s	.exit
-	if_not_space.s 	.wait
+	cmpi.b	#space_bar,ikbd.w
+	bne.s 	.wait
 .exit:
 	rts
 
@@ -225,6 +226,7 @@ txt_smack:	dc.b 'SMACK', 0
 txt_my:		dc.b 'MY', 0
 txt_bitch	dc.b 'BITCH', 0
 txt_up:		dc.b 'UP!!!', 0
+	even
 
 doctor_who:	
 	set_clicks #160-1
@@ -232,42 +234,42 @@ doctor_who:
 	lea		txt_knock_knock,a0
 	moveq	#4,d0
 	bsr		bottom_screen_title
-.anim_1:	
+dw_anim_1:	
 	bsr		scroll_starfield
 	bsr		add_bottom_screen_title
 	jsr		swap_screens
 	movem.l	d6-d7,-(a7)
 	move	#10,d7
 	subq.l	#1,d7
-.wait_loop:	
+dw_wait_loop:	
 	wait_click
-	dbf	d7,.wait_loop
+	dbf	d7,dw_wait_loop
 	movem.l	(a7)+,d6-d7
 	tst		click_counter
-	bgt.s	.anim_1
+	bgt.s	dw_anim_1
 	set_clicks #160-1
 	lea		txt_whos_there,a0
 	moveq	#4,d0
 	bsr		bottom_screen_title
-.anim_2:	
+dw_anim_2:	
 	bsr		scroll_starfield
 	bsr		add_bottom_screen_title
 	jsr		swap_screens
 	movem.l	d6-d7,-(a7)
 	move	#10,d7
 	subq.l	#1,d7
-.wait_loop2:
+dw_wait_loop2:
 	wait_click
-	dbf	d7,.wait_loop2
+	dbf	d7,dw_wait_loop2
 	movem.l	(a7)+,d6-d7
 	tst		click_counter
-	bgt.s	.anim_2
+	bgt.s	dw_anim_2
 	set_clicks	#20-1
 	lea		txt_doctor,a0
 	moveq	#4,d0
 	bsr		bottom_screen_title
 	move	#7,d7
-.anim3:		
+dw_anim_3:		
 	movem.l	d6-d7,-(a7)
 	bsr		scroll_starfield
 	bsr		add_bottom_screen_title
@@ -277,46 +279,46 @@ doctor_who:
 	jsr		plot_tardis
 	wait_vbl
 	jsr		swap_screens
-.wait_loop3:
+dw_wait_loop3:
 	tst		click_counter
-	bgt.s	.wait_loop3
+	bgt.s	dw_wait_loop3
 	set_clicks #20-1
 	movem.l	(a7)+,d7
-	dbf		d7,.anim3
+	dbf		d7,dw_anim_3
 	lea		txt_doctor_who,a0
 	moveq	#4,d0
 	bsr		bottom_screen_title
 	move	#7,d7
-.anim4:
+dw_anim_4:
 	movem.l	d7,-(a7)
 	bsr		scroll_starfield
 	bsr		add_bottom_screen_title
 	bsr		animate_tardis
 	wait_vbl
 	jsr		swap_screens
-.wait_loop4:	
+dw_wait_loop4:	
 	tst		click_counter
-	bgt.s	.wait_loop4
+	bgt.s	dw_wait_loop4
 	set_clicks #20-1
 	movem.l	(a7)+,d7
-	dbf		d7,.anim4
+	dbf		d7,dw_anim_4
 	lea		txt_doh,a0
 	moveq	#6,d0
 	bsr		bottom_screen_title
 	move	#17,d7
-.anim5:
+dw_anim_5:
 	movem.l	d7,-(a7)
 	bsr		scroll_starfield
 	bsr		add_bottom_screen_title
 	bsr		animate_tardis
 	wait_vbl
 	jsr		swap_screens
-.wait_loop5:
-	tst	click_counter
-	bgt.s	.wait_loop5
+dw_wait_loop5:
+	tst		click_counter
+	bgt.s	dw_wait_loop5
 	set_clicks #20-1
 	movem.l	(a7)+,d7
-	dbf	d7,.anim5
+	dbf	d7,dw_anim_5
 	rts
 
 credits:
@@ -325,14 +327,14 @@ credits:
 	bsr		doctor_who_set_up_starfield
 	moveq	#5,d6
 	lea		credits_ptr,a6
-.loop:	
+cr_loop1:	
 	movea.l	4(a6),a0
 	moveq	#5,d0
 	movem.l	d6/a6,-(a7)
 	bsr		bottom_screen_title
 	movem.l	(a7)+,d6/a6
 	move	#7,d7
-.loop2:	
+cr_loop2:	
 	movem.l	d6-d7/a6,-(a7)
 	bsr		scroll_starfield
 	bsr		add_bottom_screen_title
@@ -347,10 +349,10 @@ credits:
 	wait_until_end_clicks
 	set_clicks #20-1
 	movem.l	(a7)+,d6-d7/a6
-	dbf	d7,.loop2
+	dbf	d7,cr_loop2
 	addq.l	#8,a6
 	set_clicks #20-1
-	dbf	d6,.loop
+	dbf	d6,cr_loop1
 	set_clicks #20-1
 	wait_until_end_clicks
 	rts
@@ -514,13 +516,13 @@ tridi_donut:
 	moveq	#2,d6
 	movea.l	back,a0
 	suba.l	#32000,a0
-.in_loop:
+td_in_loop:
 	adda	#8000,a0
 	wait_vbl
 	set_vidaddr a0
 	set_clicks 	#80-1
 	wait_until_end_clicks
-	dbf	d6,.in_loop
+	dbf	d6,td_in_loop
 	move	#79,click_counter
 	adda	#8000,a0
 	wait_vbl
@@ -533,43 +535,43 @@ tridi_donut:
 	adda.l	#32000,a0
 	jsr		black_screen
 	wait_until_end_clicks
-	jsr	swap_screens
+	jsr		swap_screens
 	set_clicks	#640-1
-.anim_loop1:
+td_anim_loop1:
 	wait_vbl
 	jsr		swap_screens
 	movem.l	d6-d7,-(a7)
 	move	#19,d7
 	subq.l	#1,d7
-.wait_loop1:
+td_wait_loop1:
 	wait_click
-	dbf	d7,.wait_loop1
+	dbf	d7,td_wait_loop1
 	movem.l	(a7)+,d6-d7
-	tst	click_counter
-	bgt.s	.anim_loop1
-	jsr	L156204
+	tst		click_counter
+	bgt.s	td_anim_loop1
+	jsr		swap_screens
 	movea.l	back,a0
 	move	#3,d7
-.out_loop:
+td_out_loop:
 	wait_vbl
 	set_vidaddr	a0
 	adda	#8000,a0
 	set_clicks	#79
 	wait_until_end_clicks
-	dbf	d7,.out_loop
+	dbf		d7,td_out_loop
 	set_clicks	#319
-.anim2_loop:
+td_anim2_loop:
 	wait_vbl
-	jsr	swap_screens
+	jsr		swap_screens
 	movem.l	d6-d7,-(a7)
 	move	#19,d7
 	subq.l	#1,d7
-.wait_loop:
+td_wait_loop2:
 	wait_click
-	dbf	d7,.wait_loop
+	dbf	d7,td_wait_loop2
 	movem.l	(a7)+,d6-d7
 	tst		click_counter
-	bgt.s	.anim2_loop
+	bgt.s	td_anim2_loop
 	rts
 
 txt_tridi_donut:
@@ -1059,15 +1061,15 @@ greetings:
 	movem.l	d6-d7,-(a7)
 	move	#80,d7
 	subq.l	#1,d7
-.wait_loop1:
+td_wait_loop21:
 	wait_click
-	dbf	d7,.wait_loop1
+	dbf	d7,td_wait_loop21
 	movem.l	(a7)+,d6-d7
 	lea		greets_list_ptr,a5
-.greets_loop:
+greets_loop:
 	move.l	(a5)+,d0
 	tst.l	d0
-	beq.s	.end_greets
+	beq.s	greets_end
 	movea.l	d0,a0
 	movea.l	front,a1
 	move	(a5)+,d0
@@ -1076,13 +1078,13 @@ greetings:
 	movem.l	d6-d7,-(a7)
 	move	(a5)+,d7
 	subq.l	#1,d7
-.wait_loop2:
+td_wait_loop22:
 	wait_click
-	dbf		d7,.wait_loop2
+	dbf		d7,td_wait_loop22
 	movem.l	(a7)+,d6-d7
-	bra.s	.greets_loop
+	bra.s	greets_loop
 
-.end_greets:
+greets_end:
 	moveq	#5,d0
 	jsr		do_bombs_mono
 	wait_until_end_clicks
@@ -1177,11 +1179,11 @@ codearokie:
 	jsr		depack_pic_to_back
 	wait_until_end_clicks
 	jsr		swap_screens
-.next_word:
+.next_frame:
 	bsr		codearokie_frame
 	tst.b	codearokie_abort
 	bne.s	.exit
-	bra.s	.next_word
+	bra.s	.next_frame
 .exit:
 	set_vidaddr back
 	set_clicks #328-1
@@ -1197,7 +1199,7 @@ codearokie_frame:
 	movea.l	codearokie_pointer,a0
 	move.l	(a0)+,d0
 	tst.l	d0
-	bmi		.finished_codearokie
+	bmi		c_finished_codearokie
 	move.l	a0,codearokie_pointer
 	movea.l	d0,a2
 	movea.l	front,a0
@@ -1206,26 +1208,26 @@ codearokie_frame:
 	REPT 	32000-30720
 	move.l	d0,(a0)+
 	ENDR
-.next_word:
+c_next_word:
 	move.l	(a2)+,d7
 	move	(a2)+,d0
 	move	(a2)+,d2
 	tst.l	d7
-	bmi.s	.finished_frame
+	bmi.s	c_finished_frame
 	movea.l	front,a1
 	movea.l	d7,a0
 	move	#384,d1
 	set_clicks d2
 	jsr		font_string_mono
 	wait_until_end_clicks
-	bra.s	.next_word
+	bra.s	c_next_word
 
-.finished_frame:	
+c_finished_frame:	
 	set_clicks d2
 	wait_until_end_clicks
 	rts
 
-.finished_codearokie:
+c_finished_codearokie:
 	set_clicks d2
 	wait_until_end_clicks
 	st	codearokie_abort
@@ -1323,9 +1325,9 @@ codearokie_frame_7:
 	dc.l	frame7_text2
 	dc.w	4, $13
 	dc.l	-1
-	dc.w	-1, $13
 
 codearokie_frame_8:
+	dc.w	-1, $13
 
 frame1_text1 dc.b 'Join', 0
 frame1_text2 dc.b 'in', 0
@@ -1398,7 +1400,7 @@ man_from_uncle:
 
 telly_scanner:
 	moveq	#0,d0
-	lea	L205326,a0
+	lea	fadein_data,a0
 	move.l	d0,(a0)+
 	move.l	d0,(a0)+
 	move.l	d0,(a0)+
@@ -1563,6 +1565,7 @@ txt_do_you_remember:
 	dc.b 'Do you', 13
 	dc.b '  remember', 13
 	dc.b ' old telly?'
+	even
 
 create_tv_static:
 	move	#16000-1,d7
@@ -1595,128 +1598,11 @@ create_tv_static:
 	dbf	d7,.clear
 	rts
 
-L224636:
-	cmpi.l	#$4656444F,(a0)+
-	bne.s	L224738
-L224644:addq.l	#2,a0
-	move.l	vbl.w,-(a7)
-	move	sr,-(a7)
-	move.l	#L224762,112
-L224660	=	*-2
-	move	#8960,sr
-	move	timer.w,d0
-L224670:cmp	timer.w,d0
-L224672	=	*-2
-	beq.s	L224670
-	move.l	(a0)+,$00FF820E
-	move	(a0)+,$00FF8266
-	movea.l	#$00FF8282,a1
-L224694:move	(a0)+,(a1)+
-	cmpa.l	#$00FF8292,a1
-	bne.s	L224694
-	movea.l	#$00FF82A2,a1
-L224710:move	(a0)+,(a1)+
-	cmpa.l	#$00FF82AE,a1
-	bne.s	L224710
-	move	(a0)+,$00FF82C2
-	move	(a7)+,sr
-	move.l	(a7)+,112
-	moveq	#0,d0
-	rts
-
-L224738:moveq	#-1,d0
-	rts
-
-L224742:moveq	#-2,d0
-	rts
-
-	cmpi.b	#0,(a0)
-	bne.s	L224742
-	bra.s	L224644
-
-	cmpi.b	#2,(a0)
-	bne.s	L224742
-	bra.s	L224644
-
-L224762:addq	#1,timer.w
-	rte
-
-	lea	L224856,a1
-	move.l	#$4656444F,(a1)+
-	move.b	$00FF8006,(a1)+
-	move.b	$00FF820A,(a1)+
-	move.l	$00FF820E,(a1)+
-L224798:move	$00FF8266,(a1)+
-	movea.l	#$00FF8282,a0
-L224810:move	(a0)+,(a1)+
-	cmpa.l	#$00FF8292,a0
-	bne.s	L224810
-	movea.l	#$00FF82A2,a0
-L224826:move	(a0)+,(a1)+
-	cmpa.l	#$00FF82AE,a0
-	bne.s	L224826
-	move	$00FF82C2,(a1)+
-	rts
-
-	movea.l	#L224856,a0
-	bsr	L224636
-	rts
-
-L224856:ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	move.l	vbl.w,-(a7)
-	move	sr,-(a7)
-	move.l	#L225008,vbl.w
-	move	#8960,sr
-	move	timer.w,d0
-L224922:cmp	timer.w,d0
-	beq.s	L224922
-	move.b	(a0)+,-32246.w
-	move.b	(a0)+,-32160.w
-	move	(a0)+,-32154.w
-	move	(a0)+,-32126.w
-	move	(a0)+,-32116.w
-	move	(a0)+,-32084.w
-	move	(a0)+,-32064.w
-	move	(a0)+,-32062.w
-	move	(a0)+,-32124.w
-	move	(a0)+,-32122.w
-	move	(a0)+,-32120.w
-	move	(a0)+,-32118.w
-	move	(a0)+,-32094.w
-	move	(a0)+,-32092.w
-	move	(a0)+,-32090.w
-	move	(a0)+,-32088.w
-	move	(a0)+,-32086.w
-	move	(a0),-32240.w
-	move	(a7)+,sr
-	move.l	(a7)+,vbl.w
-	rts
-
-L225008:addq	#1,timer.w
-	rte
-
-	move.b	d7,-1022.w
-	rts
-
-L225020:bsr.s	L225028
-	dbf	d0,L225020
-	rts
-
 	include	includes/musplay.s
 	include includes/genbin.s
 	include includes/depack35.s
 
-	section data
+	data
 
 pic_testcard:
 	incbin graphics/packed/testcard.pi3
@@ -1754,7 +1640,7 @@ mus_crash:
 	incbin 	music/crash.thk
 	even
 	
-	section bss
+	bss
 
 old_screen_ptr:	ds.l	1
 oldvbl:			ds.l	1
