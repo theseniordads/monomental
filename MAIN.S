@@ -572,35 +572,11 @@ tridi_donut:
 	bgt.s	.anim2_loop
 	rts
 
-L125534:
-	movea.l	back,a0
-	jsr	black_screen
-	movea.l	back,a1
-	lea	L125588,a0
-	move	#0,d0
-	move	#0,d1
-	jsr	font_string_mono
-	jsr	swap_screens
-L125578:
-	tst	click_counter
-	bgt.s	L125578
-	rts
-
-L125588:dc	15934
-	movea.l	d1,a0
-	bcc.s	L125694
-	movea.l	$6F757220,a0
-	dc	25193
-	moveq	#13,d2
-	btst	d6,-(a0)
-	move.l	-(a0),d0
-	bvs.s	L125720
-	movea.l	25970(a0),a0
-	bcs.s	L125660
-	movea.l	d3,a0
-	move.l	d2,24935(a6)
-	move.l	d0,-(a0)
-
+txt_tridi_donut:
+	dc.b 	'Time for tea', 13
+	dc.b   	' and DONUTS!!!!', 0
+	even
+	
 sd_present:
 	lea	pic_presents,a0
 	jsr	depack_pic_to_back
@@ -1076,41 +1052,40 @@ sort_screen_pointers:
 	rts
 			
 greetings:
-	move	#639,click_counter
-	lea	pic_greetings,a0
-	jsr	depack_pic_to_back
-	jsr	swap_screens
+	set_clicks	#639
+	lea		pic_greetings,a0
+	jsr		depack_pic_to_back
+	jsr		swap_screens
 	movem.l	d6-d7,-(a7)
 	move	#80,d7
 	subq.l	#1,d7
-L156264:move	click_counter,d6
-L156270:cmp	click_counter,d6
-	beq.s	L156270
-	dbf	d7,L156264
+.wait_loop1:
+	wait_click
+	dbf	d7,.wait_loop1
 	movem.l	(a7)+,d6-d7
-	lea	greets_list_ptr,a5
-L156292:move.l	(a5)+,d0
+	lea		greets_list_ptr,a5
+.greets_loop:
+	move.l	(a5)+,d0
 	tst.l	d0
-	beq.s	L156348
+	beq.s	.end_greets
 	movea.l	d0,a0
 	movea.l	front,a1
 	move	(a5)+,d0
 	move	(a5)+,d1
-	jsr	font_string_mono
+	jsr		font_string_mono
 	movem.l	d6-d7,-(a7)
 	move	(a5)+,d7
 	subq.l	#1,d7
-L156324:move	click_counter,d6
-L156330:cmp	click_counter,d6
-	beq.s	L156330
-	dbf	d7,L156324
+.wait_loop2:
+	wait_click
+	dbf		d7,.wait_loop2
 	movem.l	(a7)+,d6-d7
-	bra.s	L156292
+	bra.s	.greets_loop
 
-L156348:moveq	#5,d0
-	jsr	do_bombs_mono
-L156356:tst	click_counter
-	bgt.s	L156356
+.end_greets:
+	moveq	#5,d0
+	jsr		do_bombs_mono
+	wait_until_end_clicks
 	rts
 
 pic_greetings:
@@ -1123,9 +1098,70 @@ pic_donut2:
 	incbin graphics/packed/donut2.pi3
 	even
 
-txt_tridi_donut:
-	dc.b 	'Time for tea', 13
-	dc.b   	' and DONUTS!!!!', 0
+greets_list_ptr:
+	dc.l	txt_greet1
+	dc.w	7, 0
+	dc.l	txt_greet2
+	dc.w	4, 32
+	dc.l	txt_greet3
+	dc.w	7, 370
+	dc.l	txt_greet4
+	dc.w	9, 64
+	dc.l	txt_greet5
+	dc.w	10, 50
+	dc.l	txt_greet6
+	dc.w	5, 150
+	dc.l	txt_greet7
+	dc.w	7, 100
+	dc.l	txt_greet8
+	dc.w	8, 350
+	dc.l	txt_greet9
+	dc.w	7, 250
+	dc.l	txt_greet10
+	dc.w	6, 200
+	dc.l	txt_greet11
+	dc.w	5, 75
+	dc.l	txt_greet12
+	dc.w	10, 225
+	dc.l	txt_greet13
+	dc.w	5, 125
+	dc.l	txt_greet14
+	dc.w	4, 325
+	dc.l	txt_greet15	
+	dc.w	8, 275
+	dc.l	txt_greet16
+	dc.w	8, 175
+	dc.l	txt_greet17
+	dc.w	5, 25
+	dc.l	txt_greet18
+	dc.w	5, 375
+	dc.l	txt_greet19
+	dc.w	5, 300
+	dc.l	txt_greet20
+	dc.w	3, 384
+	dc.l	0
+
+txt_greet1:		dc.b 'GREETS 2:', 0
+txt_greet2:		dc.b 'Everyone at ALT!', 0
+txt_greet3:		dc.b 'Hello!', 0
+txt_greet4:		dc.b 'MAGIE TEEM!', 0
+txt_greet5:		dc.b 'Rejexct!', 0
+txt_greet6:		dc.b 'reservoir Frogs!', 0
+txt_greet7:		dc.b '#atari IRC!', 0
+txt_greet8:		dc.b 'Network mag!!!', 0
+txt_greet9:		dc.b 'Undercuver mag!', 0
+txt_greet10:	dc.b 'Mystik Bites!', 0
+txt_greet11:	dc.b 'ded Hacxers Soc!', 0
+txt_greet12:	dc.b 'ipir!', 0
+txt_greet13:	dc.b 'Rasero Team- NOT!', 0
+txt_greet14:	dc.b 'Mystik Bites!', 0
+txt_greet15:	dc.b 'Bill Gates- our hero!', 0
+txt_greet16:	dc.b 'Sin BAD!', 0
+txt_greet17:	dc.b 'ST Pluz!', 0
+txt_greet18:	dc.b 'Atari Computing!!!', 0
+txt_greet19:	dc.b 'Father Michael!!', 0
+txt_greet20:	dc.b '<< and any 1 else!!', 0
+	even
 
 codearokie:
 	movea.l	back,a0
@@ -1210,6 +1246,7 @@ txt_codearokie:
 	dc.b	'invents a new', 13
 	dc.b	' demo effect!!', 13, 13, 13
 	dc.b	'CODEAROKE!!!', 0
+	even
 
 codearokie_frame_pointers:
 	dc.l	codearokie_frame_1
@@ -1291,52 +1328,32 @@ codearokie_frame_7:
 codearokie_frame_8:
 
 frame1_text1 dc.b 'Join', 0
-	even
 frame1_text2 dc.b 'in', 0
-	even
 frame1_text3 dc.b 'folks!!', 0
-	even
 
 frame2_text1 dc.b 'MOVE.L', 0
-	even
 frame2_text2 dc.b '4,', 0
-	even
 frame2_text3 dc.b '$70', 0
-	even
 
 frame3_text1 dc.b 'MOVE.W', 0
-	even
 frame3_text2 dc.b '55,', 0
-	even
 frame3_text3 dc.b '+(A9,D10)', 0
-	even
 
 frame4_text1 dc.b 'TAS', 0
-	even
 frame4_text2 dc.b '$DD068.W', 0
-	even
 
 frame5_text1 dc.b 'MOVE.w', 0
-	even
 frame5_text2 dc.b '+(A3),', 0
-	even
 frame5_text3 dc.b 'A8', 0
-	even
 
 frame6_text1 dc.b 'CMP.B', 0
-	even
 frame6_text2 dc.b '#678,', 0
-	even
 frame6_text3 dc.b 'A12', 0
-	even
 
 frame7_text1 dc.b 'DROP', 0
-	even
 frame7_text2 dc.b '<<FRAME>>', 0
-	even
 
 frame8_text1 dc.b 'RTS', 0
-	even
 frame8_text2 dc.b '!!!!!', 0
 	even
 
