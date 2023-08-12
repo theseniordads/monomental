@@ -38,14 +38,14 @@ To turn the compiled binary to an Atari executable:
 
 * `COMPILED` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
 * `GRAPHICS` 
-  * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 image. They're just *used* like bitmamp.
-  * `PACKED`- Degas Elite PI3 images packed with Atomix v3.5 packer.
-  * `UNPACKED`- the unpacked versions of the above. Not used by the code.
+  * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 images. They're just *used* like bitmamps.
+  * `PACKED`- Degas Elite PI3 images packed with Atomix v3.5 packer. Used by the code.
+  * `UNPACKED`- the unpacked versions of the above. *Not* used by the code.
   * `SENIOR_L.OGO` - The Senior Dads logo in ASCII text. Designed for use in ST Med or Hi resoloution.
 * `DOCS/README.md` - [How we reverse-engineered the demo](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
 * `DISASSMB` - Disassembly of the original binary using TT-Digger. This is what we started out with!
 * `INCLUDES` - Various macro and helpers code.
-* `OLD` - Earlier incomplete version of the demo. Note that the source code is *not* VASM compatible, and must be compiled in Devpac 3 on an Atari system.
+* `OLD` - Earlier incomplete version of the demo. Note that the source code has **not** been checked for VASM compatiblity, and is designed to be compiled in Devpac 3 on an Atari system.
 * `SOUND` - `.THK` files are chip tune music.
   * `CRASH.THK` - exit crash music.
   * `FANFARE.THK` - introductory fanfare.
