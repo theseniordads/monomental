@@ -1,6 +1,6 @@
 # Mono-mental
 
-**NOTE: This is still being worked on!**
+**NOTE: This is still being worked on! Don't expect this to work yet!**
 
 Full assembler source for the "Mono-mental" demo by The Senior Dads, which was released on the Atari 16 bit platform on the 8th April.
 
