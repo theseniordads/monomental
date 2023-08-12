@@ -4,7 +4,7 @@ By **THE SENIOR DADS**
 
 11 Aug 2023
 
-**NOTE: This is still being worked on!**
+**NOTE: This is still being worked on! Don't expect this to work yet!**
 
 We've recently been adding the source code of our old Atari demos to our [GitHub page](https://github.com/theseniordads), as part of our testing out using modern dev systems to create new Atari code! These days you can use a modern dev enviroment on Windows, Mac or Linux to crank out code, which you can then assemble, using [VASM](http://sun.hasenbraten.de/vasm/) and [Vlink](http://www.compilers.de/vlink.html), to an Atari excutable, which you can then run on an Atari emulator such as [Hatari](https://hatari.tuxfamily.org/)!
 
