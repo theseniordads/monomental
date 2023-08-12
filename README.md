@@ -36,20 +36,18 @@ To turn the compiled binary to an Atari executable:
 
 ## Folders
 
-* `COMPILED` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/FLOORMAT/STFLRMAT.TXT).
-* `GRAPHICS` -
-  * Graphics, in Degas Elite `.PI1` files.
-  * `MYFONT.DAT`, a plane graphics font, used by the scroller.
-  * `SYSPAL.DAT`, a binary which contains the system default colour pallette.
-    for ST Lo-res.
+* `COMPILED` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
+* `GRAPHICS` 
+  * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 image. They're just *used* like bitmamp.
+  * `PACKED`- Degas Elite PI3 images packed with Atomix v3.5 packer.
+  * `UNPACKED`- the unpacked versions of the above. Not used by the code.
+* `DOCS/README.md` - [How we reverse-engineered the demo](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
+* `DISASSMB` - Disassembly of the original binary using TT-Digger. This is what we started out with!
 * `INCLUDES` - Various macro and helpers code.
-* `OLD` - Original version of the demo before retrofitting to be a Senior Dads demo. Note that the source code is *not* VASM compatible, and must be compiled in Devpac 3 on an Atari system.
+* `OLD` - Earlier incomplete version of the demo. Note that the source code is *not* VASM compatible, and must be compiled in Devpac 3 on an Atari system.
 * `SOUND` - `.THK` files are chip tune music.
-  * `SENIOR.THK` - introductory fanfare.
-  * `POPCORN.THK` - main music: a "version" of "Popcorn".
-  * `CRASH.THK` - exit crash usic.
-* `SRC_DATA` - Original versions of sound and graphics.
-  * `GFX` - Source graphics. Formats used are:
-    * `.PC1` - Low res Degas Elite images. Can be edited in [Degas Elite](https://dhs.nu/files.php?t=single&ID=16).
-  * `SOUND` - Source sounds. Formats used are:
-    * `.MUS` Chip-tunes. Can be edited using [Megatizer v2.4](https://dhs.nu/files.php?t=single&ID=50).
+  * `CRASH.THK` - exit crash music.
+  * `FANFARE.THK` - introductory fanfare.
+  * `MONOMNTL.THK` - main demo music.
+  * `STATIC.THK` - static noise.
+  * `TESTCARD.THK` - test card music.

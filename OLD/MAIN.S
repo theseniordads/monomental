@@ -1,6 +1,6 @@
 * MONO MENTAL by SENIOR DADS
 
-	include	i:\source\bollox\general\genmacro.s
+	include	..\includes\genmacro.s
 
 	init_prog	normal_exit
 
@@ -134,9 +134,9 @@ swap_screens
 
 	include	musplay.s
 	include	yogie.s
-	include	i:\source\bollox\general\genbin.s
+	include	..\includes\genbin.s
 MODE	equ	0
-	include	i:\source\bollox\general\depack35.s
+	include	..\includes\depack35.s
 
 	section	data
 front	dc.l	screen1

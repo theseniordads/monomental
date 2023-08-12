@@ -10,7 +10,7 @@ We've recently been adding the source code of our old Atari demos to our [GitHub
 
 In the majority of cases, we had the source code to hand, and all we really had to was check it could assemble on a modern system, and the resulting executable could run on Hatari. VASM and Vlink are more or less compatible with the sort of assembler code you would write in Devpac in  the old Atari days, but there are one or two syntax things that you may have to change in order to get the code to assemble. (We'll mention those later.)
 
-**Mono-mental** was a different case altogether as we didn't have the source code for the full demo, only an early version with the just an early version of "Yogie Baird" screen completed! (You can find this in the `OLD` folder.) It's interesting in it's own right, as there's a lot of "what if?"s in the demo at this stage, but it's certainly nowhere near the complete demo as released!
+**Mono-mental** was a different case altogether as we didn't have the source code for the full demo, only an early version with the just the opening titles and an early version of "Yogie Baird" screen completed! (You can find this in the `OLD` folder.) It's interesting in it's own right, as there's a lot of "what if?"s in the demo at this stage, but it's certainly nowhere near the complete demo as released!
 
 If we were doing this on the Atari platform, we'd have probably given up trying recover the source code for the full demo, but we wondered: if you can develop for the Atari on a modern platform, can you similarly use the modern platform to make it easier to reverse-engineer the source code and data from an Atari binary?
 
