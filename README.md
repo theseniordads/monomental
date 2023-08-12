@@ -38,7 +38,7 @@ To turn the compiled binary to an Atari executable:
 
 * `COMPILED` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
 * `GRAPHICS` 
-  * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 images. They're just *used* like bitmamps.
+  * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 images. They're just *used* like bitmaps.
   * `PACKED`- Degas Elite PI3 images packed with Atomix v3.5 packer. Used by the code.
   * `UNPACKED`- the unpacked versions of the above. *Not* used by the code.
   * `SENIOR_L.OGO` - The Senior Dads logo in ASCII text. Designed for use in ST Med or Hi resoloution.
