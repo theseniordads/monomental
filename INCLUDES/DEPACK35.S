@@ -18,7 +18,7 @@
 ;call it by BSR DEPACK or JSR DEPACK but call it!
 
 	IFND	MODE
-MODE:	EQU	1
+MODE:	EQU	0			; <- SD NOTE: The way this is used in the demo, it's always 0
 	ENDC
 PIC_ALGO:	EQU	0
 DEC_SPACE:	EQU	$80	 ;MAX IS $7FFE (no odd value!)

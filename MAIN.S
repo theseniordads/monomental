@@ -41,19 +41,19 @@
 	bsr		init
 	jsr		sd_present				
 	jsr		test_card
-	jsr		mono_mental_titles
-	jsr		intro_pics
-	jsr		yogie_baird
-	jsr		codearokie
-	jsr		steptoe_and_son
-	jsr		doctor_who
-	bsr		smack_my_bitch_up
-	jsr		tridi_donut
-	jsr		greetings
-	jsr		man_from_uncle
-	jsr		mono_mental_titles
-	jsr		credits
-	jsr		the_end
+;	jsr		mono_mental_titles
+;	jsr		intro_pics
+;	jsr		yogie_baird
+;	jsr		codearokie
+;	jsr		steptoe_and_son
+;	jsr		doctor_who
+;	bsr		smack_my_bitch_up
+;	jsr		tridi_donut
+;	jsr		greetings
+;	jsr		man_from_uncle
+;	jsr		mono_mental_titles
+;	jsr		credits
+;	jsr		the_end
 	bsr		ret
 	movea.l	old_stack,a7
 	rts
@@ -223,6 +223,7 @@ senior_text_intro:
 	dc.b 27, 'E'
 	incbin	graphics\senior_l.ogo
 	dc.b 13,10
+senior_text:
 	dc.b 'SENI0R dadS!!!',13,10
 	dc.b '  .... Prezents!',13,10,10
 	dc.b '    M   O   N  O M  e   N  TT   A   L   !!!',13,10,10
@@ -231,7 +232,8 @@ senior_text_intro:
 	dc.b 'ATARI!!!   C-LAB!!!!    JTS!!!!!   HASBRO!!!',13,10,10,10
 	dc.b '                  (except the 8-bit ones- sorry!!)',13,10,10
 	dc.b ' yA needs a MOTOROLA chip for da procesaa!! And ONE mega memory!',13,10,10
-	dc.b '<Wait a little time to prepare yourselfs!!! or press SPAC£!>',0
+	dc.b '<Wait a little time to prepare yourselfs!!! or press SPAC', $9c, '!>',0
+	even
 
 smack_my_bitch_up:
 	set_clicks	#80-1
@@ -631,30 +633,20 @@ txt_tridi_donut:
 	dc.b 	'Time for tea', 13
 	dc.b   	' and DONUTS!!!!', 0
 	even
-	
-sd_present:
-	lea	pic_presents,a0
-	jsr	depack_pic_to_back
-	bsr	swap_screens
-	lea	mus_sd_fanfare,a0
-	jsr	start_music
-	set_clicks #640-1
-	wait_until_end_clicks
-	rts
+
+	include demoparts/present.s
 
 mono_mental_titles:
 	lea		pic_mono_titles1,a0
 	jsr		depack_pic_to_back
 	lea		mus_monomental_main,a0
 	tst.b	need_to_start_music
-L125694:
 	bne.s	.omit_music_start
 	jsr		start_music
 	st		need_to_start_music
 .omit_music_start:
 	bsr		swap_screens
 	set_clicks #80-1
-L125720:
 	lea		pic_mono_titles2,a0
 	jsr		depack_pic_to_back
 	wait_until_end_clicks
@@ -1561,53 +1553,58 @@ txt_yogie_baird:
 	dc.b '  John "Yogie"', 13
 	dc.b 'BAIRD invents TV!', 0
 
+* "TEST CARD" SCREEN:
+; This displays the "a NEW demo" titles on a third screen to the user,
+; whilst generating a TV static effect on the front and back screens.
+; Then after a while, it plays the testcard music, and displays the 
+; test card whilst the music plays.
 test_card:
-	movea.l	scratch_screen,a0
+	movea.l	scratch_screen,a0		; clear scratch screen
 	jsr	black_screen
-	set_vidaddr scratch_screen
+	set_vidaddr scratch_screen		; Show the blank screen
 	set_clicks	#160
-	movea.l	scratch_screen,a1
+	movea.l	scratch_screen,a1		; Display the "a NEW demo" titles
 	lea		txt_new_demo,a0
 	moveq	#0,d0
 	moveq	#80,d1
 	jsr		font_string_mono
-	movea.l	back,a6
+	movea.l	back,a6					; Start creating the static on the back screen
 	bsr		create_tv_static
-	wait_until_end_clicks
+	wait_until_end_clicks			; Wait a bit...
 	set_clicks	#159
-	movea.l	scratch_screen,a1
+	movea.l	scratch_screen,a1		; Display the "do you remember" titles
 	lea		txt_do_you_remember,a0
 	move	#8,d0
 	move	#200,d1
 	jsr		font_string_mono
-	movea.l	front,a6
+	movea.l	front,a6				; Start creating the static on the front screen
 	bsr		create_tv_static
-	wait_until_end_clicks
-	movea.l	scratch_screen,a0
+	wait_until_end_clicks			; Wait a bit...
+	movea.l	scratch_screen,a0		; Blank the scratch screen
 	jsr		black_screen
-	jsr		stop_music
-	jsr		mus_static
-	jsr		mus_static + 8
-	move	#200,timer.w
+	jsr		stop_music				; Stop the fanfare music
+	jsr		mus_static				; Initialise the static music
+	jsr		mus_static + 8			; Play the static music. We only need to this once, as we're just wanting the initial sound.
+	move	#200,timer.w			; For 200 frames...
 .animate_static:
-	jsr		swap_screens
-	wait_for #3
+	jsr		swap_screens			; Swap and display the front and back screens to animate the static
+	wait_for #3						; Wait for 3 frames (Swapping every frame would be ridiculous!)
 	tst		timer.w
 	bge.s	.animate_static
-	set_vidaddr	scratch_screen
-	lea		pic_testcard,a0
+	set_vidaddr	scratch_screen		; Go back to the (blank) scratch screen
+	lea		pic_testcard,a0			; ... because we're depacking the testcard to the back screen!
 	jsr		depack_pic_to_back
-	jsr		mus_static + 4
-	lea		mus_testcard,a0
+	jsr		mus_static + 4			; Stop the static music
+	lea		mus_testcard,a0			; Start the "Test Card" music
 	jsr		start_music
-	jsr		swap_screens
-	set_clicks #2240-1
+	jsr		swap_screens			; ... And display the test card!
+	set_clicks #2240-1				; Wait whilst the music plays
 	wait_until_end_clicks
-	movea.l	back,a0
+	movea.l	back,a0					; Clear the other screen
 	jsr		black_screen
-	jsr		swap_screens
+	jsr		swap_screens			; ... and flip the screens to create a "blackout" effect
 	set_clicks #80-1
-	wait_until_end_clicks
+	wait_until_end_clicks			; Wait a little bit, to increase the anticipation!
 	jsr		stop_music
 	rts
 
