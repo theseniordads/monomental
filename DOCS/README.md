@@ -4,6 +4,8 @@ By **THE SENIOR DADS**
 
 11 Aug 2023
 
+**NOTE: This is still being worked on!**
+
 We've recently been adding the source code of our old Atari demos to our [GitHub page](https://github.com/theseniordads), as part of our testing out using modern dev systems to create new Atari code! These days you can use a modern dev enviroment on Windows, Mac or Linux to crank out code, which you can then assemble, using [VASM](http://sun.hasenbraten.de/vasm/) and [Vlink](http://www.compilers.de/vlink.html), to an Atari excutable, which you can then run on an Atari emulator such as [Hatari](https://hatari.tuxfamily.org/)!
 
 In the majority of cases, we had the source code to hand, and all we really had to was check it could assemble on a modern system, and the resulting executable could run on Hatari. VASM and Vlink are more or less compatible with the sort of assembler code you would write in Devpac in  the old Atari days, but there are one or two syntax things that you may have to change in order to get the code to assemble. (We'll mention those later.)
@@ -12,7 +14,7 @@ In the majority of cases, we had the source code to hand, and all we really had 
 
 If we were doing this on the Atari platform, we'd have probably given up trying recover the source code for the full demo, but we wondered: if you can develop for the Atari on a modern platform, can you similarly use the modern platform to make it easier to reverse-engineer the source code and data from an Atari binary?
 
-We realised that, even enchanced tools at our disposal, it would proably be a huge undertaking, and we'd probably regret even starting it pretty soon! But we decided to give a try, and if it wasn't working, at least we'd have tried, but if it did work, we would have learned a lot about developing and debugging for the Atari platforms on a modern system!
+We realised that, even with the enchanced tools at our disposal, it would probably be a huge undertaking, and we'd probably regret even starting it pretty soon! But we decided to give a try, and if it wasn't working, at least we'd have tried, but if it did work, we would have learned a lot about developing and debugging for the Atari platforms on a modern system!
 
 Hold your seatbelts- let's go!!!!
 
@@ -136,7 +138,7 @@ One thing we noticed was that the Amiga Assembly module automatically runs VASM 
 
 We were seeing a lot of reference errors, where something in the code is pointing to a label Vlink can't find. Oddly enough, all these references were to local labels. We often used local labels in our subroutines for stuff like loops or decision branches. Oddly enough, these errors were not happening in other subroutines with local labels. We eventually determined that it was due to a timing macro that creates it's own loop complete with generated label. On Devpac this label would be compiled as a local label. However, VASM compiles it as a global label, which breaks local labels either side of it! Once we worked that out we changed the local labels to global ones in the affected subroutines, and successfuly compiled the source code to an Atari executable!
 
-There might be some config in VASM or source code syntax where we can make the macro compile a local label, but for now, we have a buildable source code!
+There might be some config in VASM or source code syntax where we can make the macro compile to a local label, but for now, we have a buildable source code!
 
 Now to get it running on an Atari...
 

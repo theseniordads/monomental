@@ -1,87 +1,140 @@
 * MONO MENTAL by SENIOR DADS
+* Original demo release: 11th April 1998 at the ALT party in Turku, Finland.
+* (https://www.altparty.org/2008/the-first-alternative-party.html)
+
+* NOTE: This is not the original source code, as that is almost certainly lost.
+* The source and data has been reverse engineered from the original executable,
+* using a disassembler, various Atari rippers, MONST2, Steven Tattersall's HRDB,
+* and Visual Studio Code along with VASM and Vlink to recreate the executable on
+* modern systems. The aim is to make the compiled executable as close to the
+* original as possible (Though it might not be 100%). For more details on how 
+* this was done, see the DOCS/README.md file.
+
+* As this is not the original source, you can safetly assume all comments here are new.
+
+* ## Assembly information ##
+ * Assembly format: Devpac 3 (VASM compatible)
+ * Target processor: Motorola 68000
+ * Exectuable format: Atari TOS .PRG
+ * Minimum hardware: Atari STFM with 1MB RAM, **MONOCHROME** monitor only.
+
+ ****** NOTE: WE'RE STIL WORKING ON THIS! ******
+
+;FINAL_VERSION							; < Comment for labels and faster assembly
+
+ 	IFD	FINAL_VERSION
+	opt	d-
+	ENDC
 
 	include includes/genmacro.s
 	include includes/musmac.s
 
-	section text
+	section text	; <- Bit wierd how VLink doesn't mind this, but chucks a wobbly at 'section data' instead of 'data'!
 
-	init_prog	normal_exit
+	init_prog	normal_exit	; This macro executes the following code as a subroutine in supervisor mode, and sets up a custom stack at 'new_stack'.
 
-	move.l	a7,old_stack
-	lea	new_stack,a7
-	bsr	init
-	jsr	sd_present
-	jsr	test_card
-	jsr	mono_mental_titles
-	jsr	intro_pics
-	jsr	yogie_baird
-	jsr	codearokie
-	jsr	steptoe_and_son
-	jsr	doctor_who
-	bsr	smack_my_bitch_up
-	jsr	tridi_donut
-	jsr	greetings
-	jsr	man_from_uncle
-	jsr	mono_mental_titles
-	jsr	credits
-	jsr	the_end
-	bsr	ret
+	* DEMOHUB!!!!!
+	; This is where all the demo parts are called from. It ends in an 'rts', as it's 
+	; a subroutine running in supervisor mode via a 'superexec' call.
+	move.l	a7,old_stack			; If you're wondering why we save the stack pointer here, and not in 'init'
+	lea		new_stack,a7			; remember BSRs and JSRs affect the stack, so we need to save it here.
+	bsr		init
+	jsr		sd_present				
+	jsr		test_card
+	jsr		mono_mental_titles
+	jsr		intro_pics
+	jsr		yogie_baird
+	jsr		codearokie
+	jsr		steptoe_and_son
+	jsr		doctor_who
+	bsr		smack_my_bitch_up
+	jsr		tridi_donut
+	jsr		greetings
+	jsr		man_from_uncle
+	jsr		mono_mental_titles
+	jsr		credits
+	jsr		the_end
+	bsr		ret
 	movea.l	old_stack,a7
 	rts
 
+* VBL:
+; We're not using the VBL to play the music, as we're doing that with Timer D to allow the music
+; to play at 50Hz speed on a 71Hz mono display. (and also on a 50Hz mono emulator display), so
+; all it really needs to do is count down the VBL timer.
 myvbl:
 	subq.w	#1,timer.w
 	rte
 
+* DEPACK PI3 to BACK SCREEN:
+; The most important subroutine in this demo!
+; Our target platform for this demo was a 1 meg STFM with mono monitor, so we packed the 18 (!)
+; Degas PI3 files used in this demo using the Atomik v3.5 packer, and depacked them on the fly
+; to the back screen when needed, ready for a screen flip to display them.
 depack_pic_to_back:
 	movea.l	back,a1
 	lea	-34(a1),a1
 	jsr	depack
 	rts
 
+* SAVE SYSTEM STUFF AND SETUP:
+; This also:
+; a) Does the opening text titles.
+; b) Checks the display resolution is hi-res monochrome
 init:	
-	move.l	$45e.w,old_screen_ptr
-	move.l	vbl.w,oldvbl
-	move.l	#myvbl,vbl.w
+	move.l	$45e.w,old_screen_ptr	; Not sure why we saved this, as we don't change it!
+	move.l	vbl.w,oldvbl			; Save the old VBL vector
+	move.l	#myvbl,vbl.w			; ... and slot in a "timer only" VBL
 	bsr		senior_text_intro
-	get_vidaddr	old_vidaddr
-	getrez_st d7				; <- Get ST Resolution
-	cmp.b	#2,d7				; <- If it's not 2 (hi-res)...
-	bne.s	hi_res_you_wally	; <- ...then show a little message!
-	clr.b	front+3
+	get_vidaddr	old_vidaddr			; Save the current video address
+	getrez_st 	d7					; <- Get ST Resolution
+	cmp.b	#2,d7					; <- If it's not 2 (hi-res)...
+	bne.s	hi_res_you_wally		; <- ...then show a little message!
+	clr.b	front+3					; Align the 3 screen addresses to 256 byte boundaries
 	clr.b	back+3
 	clr.b	scratch_screen+3
-	movea.l	front,a0
+	movea.l	front,a0				; Blank the front and back screens
 	jsr		black_screen
 	movea.l	back,a0
 	jsr		black_screen
-	jsr		swap_screens
-	wait_vbl
+	jsr		swap_screens			; Swap screens (Thus displaying the former back screen, which is now black)
+	wait_vbl						; Not sure why we're wait for a VBL here!
 	jsr		invert_stuffs
-	sf		need_to_start_music
+	sf		need_to_start_music		; Tell the opening titles we need to start the music. (We explain that in that section!)
 	rts
 
+* RESTORE SYSTEM STUFF:
+; As we haven't changed much, there's not much to restore! (The music player routines already have
+; their save and restore routines.)
 ret:	
-	jsr		stop_music
-	set_vidaddr	old_vidaddr
-	move.l	oldvbl,vbl.w
-	move.l	old_screen_ptr,$45e.w
+	jsr		stop_music				; Stop the crash music
+	set_vidaddr	old_vidaddr			; Restore the old video address
+	move.l	oldvbl,vbl.w			; Restore the old VBL vector
+	move.l	old_screen_ptr,$45e.w	; Restore the old screen pointer, even though we haven't changed it!
 	rts
 
+* MESSAGE IF DEMO IS NOT RUN ON A MONOCHROME MONITOR:
+; This is the message that appears if you try to run the demo on an Atari video mode other than
+; ST mode 2 (hi-res monochrome). It basically just clears the screen and prints a message, the 
+; user presses a key, and the demo exits. However, we're a bit concerned about *how* it exits,
+; as it uses a simple #0 trap #1 exit without restoring the stack or coming out of supervisor
+; mode!
 hi_res_you_wally:
 	print_string #.its_hi_res
 	wait_key
-	clr		-(a7)
-	trap	#1		; Gemdos
+	clr		-(a7)					; <- Er, if we're leaving without restoring the stack or coming out
+	trap	#1						; <- of supervisor mode, won't this crash the machine?
 .its_hi_res:
 	dc.b 27, 'E'	; <- Clear screen
-	dc.b 'OI! Idiot!', 13, 10, 10
+	dc.b 'OI! Idiot!', 13, 10, 10						; <- Did Dame Vera Lynn write this?
 	dc.b 'Haven''t you read the doc files?', 13,10
 	dc.b 'This is an ST HI-RES demo you', 13, 10
 	dc.b 'stupid cretin!!! Why don''t you', 13, 10
 	dc.b 'upgrade your equipment and your', 13, 10
 	dc.b 'braincells, you total thicko!!!', 0
 
+* THE ENDING:
+; Why this is the first demo part in our code, we don't know!
 the_end:
 	move	#70-1,click_counter
 	movea.l	back,a0
