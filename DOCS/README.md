@@ -175,3 +175,10 @@ We found out when we looked at our new assembled code in HRDB. Our routine used 
 This was really wierd as the same trick was used almost identically in another routine, and we could see from the compiled code in HRDB that it *was* compiling correctly! We thought: *"Instead of faffing about trying to work out what's going on, why don't we just copy over **that*** code and amend it, see if it works?"* So we commented out the not-working code, copied over the working code, amended it, compiled it- and it worked!!
 
 We thought *"Phew!"*, and got ready to clean out the not-working code. It was then that we realised that the only difference between the working and the not-working code was that the bit that increased the offset variable was `i set i+80` in the working code, and `i set i + 80` in the not-working code! The assembler had ignored anything after the space before the `+`, and had just processed it as `i set i`, meaning `i` was stuck at zero!
+
+### "Mono-mental" titles and intro pics
+You might wonder why we grouped these two together. Well, the titles screen exit after it displays the last screen so the next screen (In this case the intro pics screen) can prep it's stuff! Also the intro pics screen just displays two pics! How hard can that be?
+
+One thing we noticed was that the music appeared to be slightly corrupted! Thank goodness we still had the original music file to hand! We slotted it in, and it was as good as new! (Thank goodness the "Test Card" music wasn't similarly corrupted!)
+
+As you can expect, the intro pics section was easy! Well, apart from finding out we'd missed out the line of code needed to display the second picture!

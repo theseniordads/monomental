@@ -41,8 +41,8 @@
 	bsr		init
 	jsr		sd_present				
 	jsr		test_card
-;	jsr		mono_mental_titles
-;	jsr		intro_pics
+	jsr		mono_mental_titles
+	jsr		intro_pics
 ;	jsr		yogie_baird
 ;	jsr		codearokie
 ;	jsr		steptoe_and_son
@@ -100,7 +100,7 @@ init:
 	jsr		swap_screens			; Swap screens (Thus displaying the former back screen, which is now black)
 	wait_vbl						; Not sure why we're wait for a VBL here!
 	jsr		invert_stuffs
-	sf		need_to_start_music		; Tell the opening titles we need to start the music. (We explain that in that section!)
+	sf		do_not_restart_music		; Tell the opening titles we need to start the music. (We explain that in that section!)
 	rts
 
 * RESTORE SYSTEM STUFF:
@@ -636,47 +636,57 @@ txt_tridi_donut:
 
 	include demoparts/present.s
 
+* "MONO-MENTAL" TITLES:
+; Display a 4 frame "TV ident" style titles for the demo. Whilst each frame is displayed,
+; the next frame is depacked to the back screen.
+;
+; This subroutine is called twice in the demo. The first time it's called, the main
+; music is also started.
 mono_mental_titles:
-	lea		pic_mono_titles1,a0
+	lea		pic_mono_titles1,a0					; Title anim 1: "R" globe
 	jsr		depack_pic_to_back
-	lea		mus_monomental_main,a0
-	tst.b	need_to_start_music
-	bne.s	.omit_music_start
-	jsr		start_music
-	st		need_to_start_music
+	lea		mus_monomental_main,a0				; Load up "Mono-mental" main music
+	tst.b	do_not_restart_music				; As this title is called again later in the demo, 
+	bne.s	.omit_music_start					; test for if we have to start the music
+	jsr		start_music	
+	st		do_not_restart_music
 .omit_music_start:
-	bsr		swap_screens
+	bsr		swap_screens						; Show anim 1 for first note of music
 	set_clicks #80-1
-	lea		pic_mono_titles2,a0
+	lea		pic_mono_titles2,a0					; Title anim 2: Add "G" globe
 	jsr		depack_pic_to_back
-	wait_until_end_clicks
-	bsr		swap_screens
+	wait_until_end_clicks						; Wait until second note
+	bsr		swap_screens						; Show anim 2
 	wait_vbl
 	set_clicks #80-1
-	lea		pic_mono_titles3,a0
+	lea		pic_mono_titles3,a0					; Title anim 3: Add "B" globe and text "MONO"
 	jsr		depack_pic_to_back
-	wait_until_end_clicks
-	bsr		swap_screens
+	wait_until_end_clicks						; Wait until third note
+	bsr		swap_screens						; Show anim 3
 	wait_vbl
 	set_clicks #80-1
-	lea		pic_mono_titles4,a0
+	lea		pic_mono_titles4,a0					; Title anim 4: Add text "MENTAL"
 	jsr		depack_pic_to_back
-	wait_until_end_clicks
-	bsr		swap_screens
+	wait_until_end_clicks						; Wait until fourth note
+	bsr		swap_screens						; Show anim 4
 	wait_vbl
-	set_clicks #80-1
+	set_clicks #80-1							; Set next screen to show upon end of fourth note.
 	rts
 
+* INTRO PICS:
+; Dead simple- it just shows two pics! It was probably seperated out from the titles screen
+; when that was re-used later in the demo.
 intro_pics:
 	lea	pic_jason_king,a0
-	jsr	depack_pic_to_back
+	jsr	depack_pic_to_back				; Jason King!
 	wait_until_end_clicks
-	bsr		swap_screens
+	bsr		swap_screens				; Show Jason in his majesty!
 	wait_vbl
 	set_clicks #320-1
-	lea	pic_first_mono_demo,a0
+	lea	pic_first_mono_demo,a0			; The first mono demo!
 	jsr	depack_pic_to_back
 	wait_until_end_clicks
+	bsr		swap_screens				; Wow!
 	wait_vbl
 	set_clicks #320-1
 	wait_until_end_clicks
@@ -699,10 +709,10 @@ pic_jason_king:
 	incbin graphics/packed/j_king.pi3
 	even
 pic_first_mono_demo:
-	incbin graphics/packed/firstmono.pi3
+	incbin graphics/packed/firstmon.pi3
 	even
 
-need_to_start_music:
+do_not_restart_music:
 	dc.w	0
 
 copy_front_to_back:
