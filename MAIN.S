@@ -1031,7 +1031,7 @@ i	set	i+160				{
 	bra	.loop				; Do next character
 .exit	rts
 
-* Print text using a 32X32 font
+* Print text using a 32X16 font
 ; a0 = string
 ; a1 = screen
 ; d0,d1 = x,y
@@ -1039,9 +1039,9 @@ font_string_mono:
 	movem.l	d0-d7/a0-a6,-(a7)
 	add	d0,d0
 	add	d0,d0
-	lea	0(a1,d0),a1
+	lea	(a1,d0.w),a1
 	mulu	#80,d1
-	lea	0(a1,d1),a1
+	lea	(a1,d1.w),a1
 	movea.l	a1,a4
 .loop:
 	lea	main_font,a2
@@ -1057,17 +1057,17 @@ font_string_mono:
 .fn: 
 	subi.b	#' ',d0
 	lsl.l	#6,d0
-	lea		(a2,d0),a3
-i set 0
-	REPT	16
+	lea		(a2,d0.w),a3
+i 	set 	0
+	REPT	16	
 	move	(a3)+,i(a4)
 	move	(a3)+,i+2(a4)
-i set i + 80
+i 	set 	i+80
 	ENDR
 	adda.l	#4,a4
 	bra	.loop
-
-.exit:movem.l	(a7)+,d0-d7/a0-a6
+.exit:
+	movem.l	(a7)+,d0-d7/a0-a6
 	rts
 
 main_font:

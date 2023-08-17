@@ -166,5 +166,12 @@ As soon as we changed the mode in the source file, and re-built, the "Present...
 
 ### The "Test Card" screen
 
-No crashes here, but we noticed a couple of things wrong straight away. First was that the font used by our `font_string_mono` routine was corrupted! The second was that static music didn't appear to be playing! We actually noticed this when we were coding the original version that sometimes the static section was silent, so we weren't too worried about this one. We were more worried about the font corruption, as that was used all over the demo!
- 
+No crashes here, but we noticed a couple of things wrong straight away. First was that the font used by our `font_string_mono` routine appeared corrupted! The second was that static music didn't appear to be playing! We actually noticed this when we were coding the original version- sometimes the static section was silent- so we weren't too worried about this one. We were more worried about the font corruption, as that was used all over the demo!
+
+We were a bit surprised at this, as we we're using the same `CRAPFONT.DAT` font we'd been using since "Air Dirt", and the font data on the recompiled demo appeared to be identical to the original demo, when looked it in the Memory Pane in HRDB, so we suspected the problem might be in our recreated code! We looked at the code, and it looked like there was nothing wrong with it, and it appeared identical to the disassembled code we saw when looked at the original demo in HRDB, so what was going on?
+
+We found out when we looked at our new assembled code in HRDB. Our routine used a `REPT` block of `move.w`s to write the font data to the screen buffer, using the assembler's own built in variables to calculate the screen offsets to add to the address register handling the screen buffer. In each repeat, the offset would be increased by increasing the variable. However, looking at the assembled code, the variable wasn't being increased, and was stuck at zero! So every line of font was being written to the top line of each character!
+
+This was really wierd as the same trick was used almost identically in another routine, and we could see from the compiled code in HRDB that it *was* compiling correctly! We thought: *"Instead of faffing about trying to work out what's going on, why don't we just copy over **that*** code and amend it, see if it works?"* So we commented out the not-working code, copied over the working code, amended it, compiled it- and it worked!!
+
+We thought *"Phew!"*, and got ready to clean out the not-working code. It was then that we realised that the only difference between the working and the not-working code was that the bit that increased the offset variable was `i set i+80` in the working code, and `i set i + 80` in the not-working code! The assembler had ignored anything after the space before the `+`, and had just processed it as `i set i`, meaning `i` was stuck at zero!
