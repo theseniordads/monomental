@@ -26,8 +26,8 @@
 	opt	d-
 	ENDC
 
-	include includes/genmacro.s
-	include includes/musmac.s
+	include includes/genmacro.s			; Useful general macros
+	include includes/musmac.s			; Music and timing macros.
 
 	section text	; <- Bit wierd how VLink doesn't mind this, but chucks a wobbly at 'section data' instead of 'data'!
 
@@ -43,7 +43,7 @@
 	jsr		test_card
 	jsr		mono_mental_titles
 	jsr		intro_pics
-;	jsr		yogie_baird
+	jsr		yogie_baird
 ;	jsr		codearokie
 ;	jsr		steptoe_and_son
 ;	jsr		doctor_who
@@ -634,86 +634,8 @@ txt_tridi_donut:
 	dc.b   	' and DONUTS!!!!', 0
 	even
 
-	include demoparts/present.s
-
-* "MONO-MENTAL" TITLES:
-; Display a 4 frame "TV ident" style titles for the demo. Whilst each frame is displayed,
-; the next frame is depacked to the back screen.
-;
-; This subroutine is called twice in the demo. The first time it's called, the main
-; music is also started.
-mono_mental_titles:
-	lea		pic_mono_titles1,a0					; Title anim 1: "R" globe
-	jsr		depack_pic_to_back
-	lea		mus_monomental_main,a0				; Load up "Mono-mental" main music
-	tst.b	do_not_restart_music				; As this title is called again later in the demo, 
-	bne.s	.omit_music_start					; test for if we have to start the music
-	jsr		start_music	
-	st		do_not_restart_music
-.omit_music_start:
-	bsr		swap_screens						; Show anim 1 for first note of music
-	set_clicks #80-1
-	lea		pic_mono_titles2,a0					; Title anim 2: Add "G" globe
-	jsr		depack_pic_to_back
-	wait_until_end_clicks						; Wait until second note
-	bsr		swap_screens						; Show anim 2
-	wait_vbl
-	set_clicks #80-1
-	lea		pic_mono_titles3,a0					; Title anim 3: Add "B" globe and text "MONO"
-	jsr		depack_pic_to_back
-	wait_until_end_clicks						; Wait until third note
-	bsr		swap_screens						; Show anim 3
-	wait_vbl
-	set_clicks #80-1
-	lea		pic_mono_titles4,a0					; Title anim 4: Add text "MENTAL"
-	jsr		depack_pic_to_back
-	wait_until_end_clicks						; Wait until fourth note
-	bsr		swap_screens						; Show anim 4
-	wait_vbl
-	set_clicks #80-1							; Set next screen to show upon end of fourth note.
-	rts
-
-* INTRO PICS:
-; Dead simple- it just shows two pics! It was probably seperated out from the titles screen
-; when that was re-used later in the demo.
-intro_pics:
-	lea	pic_jason_king,a0
-	jsr	depack_pic_to_back				; Jason King!
-	wait_until_end_clicks
-	bsr		swap_screens				; Show Jason in his majesty!
-	wait_vbl
-	set_clicks #320-1
-	lea	pic_first_mono_demo,a0			; The first mono demo!
-	jsr	depack_pic_to_back
-	wait_until_end_clicks
-	bsr		swap_screens				; Wow!
-	wait_vbl
-	set_clicks #320-1
-	wait_until_end_clicks
-	rts
-
-pic_mono_titles1:
-	incbin graphics/packed/mono1.pi3
-	even
-pic_mono_titles2:
-	incbin graphics/packed/mono2.pi3
-	even
-pic_mono_titles3:
-	incbin graphics/packed/mono3.pi3
-	even
-pic_mono_titles4:
-	incbin graphics/packed/mono4.pi3
-	even
-
-pic_jason_king:
-	incbin graphics/packed/j_king.pi3
-	even
-pic_first_mono_demo:
-	incbin graphics/packed/firstmon.pi3
-	even
-
-do_not_restart_music:
-	dc.w	0
+	include demoparts/present.s			; "Senior Dads present..." screen.
+	include demoparts/title.s			; "Titles" and "Intro pics" screens.
 
 copy_front_to_back:
 	movea.l	front,a0
@@ -1320,69 +1242,77 @@ codearokie_pointer:
 
 codearokie_frame_1:
 	dc.l	frame1_text1
-	dc.w	0, 13
+	dc.w	0, 20-1
 	dc.l	frame1_text2
-	dc.w	5, 13
+	dc.w	5, 20-1
 	dc.l	frame1_text3
-	dc.w	8, 13
+	dc.w	8, 20-1
 	dc.l	-1
-	dc.w	-1,13
+	dc.w	-1, 20-1
 
 codearokie_frame_2:
 	dc.l	frame2_text1
-	dc.w	0, 13
+	dc.w	0, 20-1
 	dc.l	frame2_text2
-	dc.w	7, 13
+	dc.w	7, 20-1
 	dc.l	frame2_text3
-	dc.w	9, 13
+	dc.w	9, 20-1
 	dc.l	-1
-	dc.w	-1,13
+	dc.w	-1, 20-1
 
 codearokie_frame_3:
 	dc.l	frame3_text1
-	dc.w	0, $13
+	dc.w	0, 20-1
 	dc.l	frame3_text2
-	dc.w	7, $13
+	dc.w	7, 20-1
 	dc.l	frame3_text3
-	dc.w	10, $13
+	dc.w	10, 20-1
 	dc.l	-1
-	dc.w	-1, $13
+	dc.w	-1, 20-1
 
 codearokie_frame_4:
 	dc.l	frame4_text1
-	dc.w	0, $27
+	dc.w	0, 40-1
 	dc.l	frame4_text2
-	dc.w	4, $13
+	dc.w	4, 20-1
 	dc.l	-1
-	dc.w	-1, $13
+	dc.w	-1, 20-1
 
 codearokie_frame_5:
 	dc.l	frame5_text1
-	dc.w	0, $13
+	dc.w	0, 20-1
 	dc.l	frame5_text2
-	dc.w	7, $13
+	dc.w	7, 20-1
 	dc.l	frame5_text3
-	dc.w	10, $d
+	dc.w	13, 20-1
 	dc.l	-1
-	dc.w	-1, $13
+	dc.w	-1, 20-1
 
 codearokie_frame_6:
 	dc.l	frame6_text1
-	dc.w	0, $27
+	dc.w	0, 20-1
 	dc.l	frame6_text2
-	dc.w	5, $13
-	dc.l 	-1
-	dc.w	-1, $13
+	dc.w	6, 20-1
+	dc.l	frame6_text3
+	dc.w	11, 20-1
+	dc.l	-1
+	dc.w	-1, 20-1
 
 codearokie_frame_7:
 	dc.l	frame7_text1
-	dc.w	0, $13
+	dc.w	0, 40-1
 	dc.l	frame7_text2
-	dc.w	4, $13
+	dc.w	5, 20-1
 	dc.l	-1
+	dc.w	-1, 20-1
 
 codearokie_frame_8:
-	dc.w	-1, $13
+	dc.l	frame8_text1
+	dc.w	0, 40-1
+	dc.l	frame8_text2
+	dc.w	4, 20-1
+	dc.l	-1
+	dc.w	-1, 20-1
 
 frame1_text1 dc.b 'Join', 0
 frame1_text2 dc.b 'in', 0
@@ -1414,250 +1344,9 @@ frame8_text1 dc.b 'RTS', 0
 frame8_text2 dc.b '!!!!!', 0
 	even
 
-yogie_baird:
-	movea.l	back,a0
-	jsr		black_screen
-	movea.l	back,a1
-	lea		txt_yogie_baird,a0
-	move	#1,d0
-	move	#100,d1
-	jsr		font_string_mono
-	jsr		swap_screens
-	set_clicks #320-1
-	wait_until_end_clicks
-	lea		pic_yogie_baird,a0
-	lea		screen3-34,a1
-	jsr		depack
-	move.l	#screen3,telly_scan_source
-	set_clicks	#640-1
-	bsr		telly_scanner
-	rts
-
-steptoe_and_son:
-	jsr		swap_screens
-	lea		pic_steptoe_and_son,a0
-	lea		screen3-34,a1
-	jsr		depack
-	move.l	#screen3,telly_scan_source
-	set_clicks #640-1
-	bsr		telly_scanner
-	rts
-
-man_from_uncle:
-	jsr		swap_screens
-	lea		pic_man_from_uncle,a0
-	lea		screen3-34,a1
-	jsr		depack
-	move.l	#screen3,telly_scan_source
-	set_clicks #640-1
-	bsr		telly_scanner
-	rts
-
-telly_scanner:
-	moveq	#0,d0
-	lea	fadein_data,a0
-	move.l	d0,(a0)+
-	move.l	d0,(a0)+
-	move.l	d0,(a0)+
-	lea	scan_mask,a0
-	move.l	d0,(a0)+
-	move.l	d0,(a0)+
-	move.l	d0,(a0)+
-.loop:
-	movea.l	back,a0
-	jsr	black_screen
-	bsr	scan_strip
-	bsr	fadein_mask
-	wait_vbl
-	jsr	swap_screens
-	if_not_endclicks .loop
-	sf	scan_wrapped
-	rts
-
-scan_strip:
-	move	scan_pos,d0
-	move	d0,d1
-	addi.w	#12,d0
-	cmpi.w	#80,d0
-	ble.s	.no_reset
-	subi.w	#80,d0
-	st		scan_wrapped
-.no_reset:
-	move	d0,scan_pos
-	movea.l	back,a0
-	movea.l	telly_scan_source,a1
-	adda	d1,a0
-	adda	d1,a1
-	movem.l	scan_mask,d1-d3
-	move.l	d1,d4
-	move.l	d2,d5
-	move.l	d3,d6
-	not.l	d4
-	not.l	d5
-	not.l	d6
-i	set	0
-	REPT	400
-	move.l	i(a1),d0
-	and.l	d1,d0
-	or.l	d4,d0
-	move.l	d0,i(a0)
-	move.l	i+4(a1),d0
-	and.l	d2,d0
-	or.l	d5,d0
-	move.l	d0,i+4(a0)
-	move.l	i+8(a1),d0
-	and.l	d3,d0
-	or.l	d6,d0
-	move.l	d0,i+8(a0)
-i	set	i+80
-	ENDR
-	rts
-
-fadein_mask:
-	if_false.s	scan_wrapped,.no_fadeup
-	sf		scan_wrapped
-	bsr		.scroll_mask
-	bsr		.scroll_mask
-	bsr		.scroll_mask
-	lea	scan_mask_source,a1
-	lea	scan_mask,a2
-	REPT	6
-	move.w	(a0)+,d0
-	move.w	(a1)+,d1
-	and.w	d0,d1
-	move.w	d1,(a2)+
-	ENDR
-.no_fadeup:
-	rts
-
-.scroll_mask
-	lea	fadein_data+(6*2),a0
-	REPT	6
-	roxl.w	-(a0)
-	ENDR
-	ori.w	#1,(5*2)(a0)
-	rts
-
-scan_mask_source
-	REPT	6
-	dc.w	%1111111111110101
-	ENDR
-scan_mask	ds.l	3
-
-fadein_data	dcb.l	3,0
-
-scan_pos	dc.w	0
-
-pic_yogie_baird:
-	incbin graphics/packed/yogie.pi3
-	even
-
-telly_scan_source: dc.l	0
-
-scan_wrapped:	dc.w	0
-
-txt_yogie_baird:
-	dc.b '1927!!', 13
-	dc.b '  The world ', 13
-	dc.b ' changes!', 13, 13
-	dc.b '  John "Yogie"', 13
-	dc.b 'BAIRD invents TV!', 0
-
-* "TEST CARD" SCREEN:
-; This displays the "a NEW demo" titles on a third screen to the user,
-; whilst generating a TV static effect on the front and back screens.
-; Then after a while, it plays the testcard music, and displays the 
-; test card whilst the music plays.
-test_card:
-	movea.l	scratch_screen,a0		; clear scratch screen
-	jsr	black_screen
-	set_vidaddr scratch_screen		; Show the blank screen
-	set_clicks	#160
-	movea.l	scratch_screen,a1		; Display the "a NEW demo" titles
-	lea		txt_new_demo,a0
-	moveq	#0,d0
-	moveq	#80,d1
-	jsr		font_string_mono
-	movea.l	back,a6					; Start creating the static on the back screen
-	bsr		create_tv_static
-	wait_until_end_clicks			; Wait a bit...
-	set_clicks	#159
-	movea.l	scratch_screen,a1		; Display the "do you remember" titles
-	lea		txt_do_you_remember,a0
-	move	#8,d0
-	move	#200,d1
-	jsr		font_string_mono
-	movea.l	front,a6				; Start creating the static on the front screen
-	bsr		create_tv_static
-	wait_until_end_clicks			; Wait a bit...
-	movea.l	scratch_screen,a0		; Blank the scratch screen
-	jsr		black_screen
-	jsr		stop_music				; Stop the fanfare music
-	jsr		mus_static				; Initialise the static music
-	jsr		mus_static + 8			; Play the static music. We only need to this once, as we're just wanting the initial sound.
-	move	#200,timer.w			; For 200 frames...
-.animate_static:
-	jsr		swap_screens			; Swap and display the front and back screens to animate the static
-	wait_for #3						; Wait for 3 frames (Swapping every frame would be ridiculous!)
-	tst		timer.w
-	bge.s	.animate_static
-	set_vidaddr	scratch_screen		; Go back to the (blank) scratch screen
-	lea		pic_testcard,a0			; ... because we're depacking the testcard to the back screen!
-	jsr		depack_pic_to_back
-	jsr		mus_static + 4			; Stop the static music
-	lea		mus_testcard,a0			; Start the "Test Card" music
-	jsr		start_music
-	jsr		swap_screens			; ... And display the test card!
-	set_clicks #2240-1				; Wait whilst the music plays
-	wait_until_end_clicks
-	movea.l	back,a0					; Clear the other screen
-	jsr		black_screen
-	jsr		swap_screens			; ... and flip the screens to create a "blackout" effect
-	set_clicks #80-1
-	wait_until_end_clicks			; Wait a little bit, to increase the anticipation!
-	jsr		stop_music
-	rts
-
-txt_new_demo:
-	dc.b '... a n3w d$mo! 1', 0
-
-txt_do_you_remember:
-	dc.b 'Do you', 13
-	dc.b '  remember', 13
-	dc.b ' old telly?'
-	even
-
-create_tv_static:
-	move	#16000-1,d7
-.static_loop:
-	move	#17,-(a7)	; Random
-	trap	#14			; Xbios
-	addq.l	#2,a7
-	move	d0,(a6)+
-	dbf		d7,.static_loop
-	rts
-
-	movem.l	d0,-(a7)
-	ext.l	d6
-	moveq	#0,d0
-	subq.l	#1,d7
-.loop:
-	divu	#10,d6
-	swap	d6
-	move	d6,d0
-	clr	d6
-	swap	d6
-	addi.b	#48,d0
-	move.b	d0,0(a6,d7)
-	dbf		d7,.loop
-	movem.l	(a7)+,d0
-	rts
-
-.clear:
-	move.b	(a5)+,(a6)+
-	dbf	d7,.clear
-	rts
-
+	include demoparts/yogie.s			; "Yogie Baird", "Steptool and Son", and "Man from UNCLE" screens.
+	include demoparts/testcard.s		; "Do you remember old telly?" and "Test Card" screens.
+	
 	include	includes/musplay.s
 	include includes/genbin.s
 	include includes/depack35.s

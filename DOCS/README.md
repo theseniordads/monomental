@@ -182,3 +182,7 @@ You might wonder why we grouped these two together. Well, the titles screen exit
 One thing we noticed was that the music appeared to be slightly corrupted! Thank goodness we still had the original music file to hand! We slotted it in, and it was as good as new! (Thank goodness the "Test Card" music wasn't similarly corrupted!)
 
 As you can expect, the intro pics section was easy! Well, apart from finding out we'd missed out the line of code needed to display the second picture!
+
+### "Yogie Baird" screen
+It worked first time!!!! We were dreading this one, and all for nothing! We spent more time typing this sentence than we did debugging the screen!
+
