@@ -186,3 +186,9 @@ As you can expect, the intro pics section was easy! Well, apart from finding out
 ### "Yogie Baird" screen
 It worked first time!!!! We were dreading this one, and all for nothing! We spent more time typing this sentence than we did debugging the screen!
 
+### "Codearokie" and "Basil" screens
+We were also dreading this one too, as there was so many fiddly bits with text pointers and timing tables!
+But it turns out that only the Codearokie "frame" data needed debugging, and it was mostly small typos affecting the positioning and timing, and there wasn't even much of that! The only real biggie was some missing data for the last frame, which the code interepreted as *"sit around and do nothing for a very long time"*!
+
+### "Steptool and Son" 
+Worked first time, but we were less surprised as this uses the code from the "Yogie Baird" screen!

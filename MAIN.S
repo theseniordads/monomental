@@ -44,8 +44,8 @@
 	jsr		mono_mental_titles
 	jsr		intro_pics
 	jsr		yogie_baird
-;	jsr		codearokie
-;	jsr		steptoe_and_son
+	jsr		codearokie
+	jsr		steptool_and_son
 ;	jsr		doctor_who
 ;	bsr		smack_my_bitch_up
 ;	jsr		tridi_donut
@@ -1142,208 +1142,7 @@ txt_greet19:	dc.b 'Father Michael!!', 0
 txt_greet20:	dc.b '<< and any 1 else!!', 0
 	even
 
-codearokie:
-	movea.l	back,a0
-	jsr		black_screen
-	movea.l	back,a1
-	lea		txt_codearokie,a0
-	move	#1,d0
-	move	#100,d1
-	jsr		font_string_mono
-	jsr		swap_screens
-	set_clicks #320-1
-	lea		pic_codearokie,a0
-	jsr		depack_pic_to_back
-	wait_until_end_clicks
-	jsr		swap_screens
-.next_frame:
-	bsr		codearokie_frame
-	tst.b	codearokie_abort
-	bne.s	.exit
-	bra.s	.next_frame
-.exit:
-	set_vidaddr back
-	set_clicks #328-1
-	lea		pic_basil,a0
-	jsr		depack_pic_to_back
-	wait_until_end_clicks
-	rts
-
-codearokie_abort: ds.b	1
-	even
-codearokie_frame:
-	sf		codearokie_abort
-	movea.l	codearokie_pointer,a0
-	move.l	(a0)+,d0
-	tst.l	d0
-	bmi		c_finished_codearokie
-	move.l	a0,codearokie_pointer
-	movea.l	d0,a2
-	movea.l	front,a0
-	lea		30720(a0),a0
-	moveq	#-1,d0
-	REPT 	32000-30720
-	move.l	d0,(a0)+
-	ENDR
-c_next_word:
-	move.l	(a2)+,d7
-	move	(a2)+,d0
-	move	(a2)+,d2
-	tst.l	d7
-	bmi.s	c_finished_frame
-	movea.l	front,a1
-	movea.l	d7,a0
-	move	#384,d1
-	set_clicks d2
-	jsr		font_string_mono
-	wait_until_end_clicks
-	bra.s	c_next_word
-
-c_finished_frame:	
-	set_clicks d2
-	wait_until_end_clicks
-	rts
-
-c_finished_codearokie:
-	set_clicks d2
-	wait_until_end_clicks
-	st	codearokie_abort
-	rts
-		
-pic_codearokie:
-	incbin graphics/packed/codearok.pi3
-	even
-pic_basil:
-	incbin graphics/packed/basil.pi3
-	even
-
-txt_codearokie:
-	dc.b 	'1998!!', 13
-	dc.b 	'  The world ', 13
-	dc.b 	' changes!', 13, 13
-	dc.b	' COLOSTOMY BAG', 13
-	dc.b	'invents a new', 13
-	dc.b	' demo effect!!', 13, 13, 13
-	dc.b	'CODEAROKE!!!', 0
-	even
-
-codearokie_frame_pointers:
-	dc.l	codearokie_frame_1
-	dc.l	codearokie_frame_2
-	dc.l	codearokie_frame_3
-	dc.l	codearokie_frame_4
-	dc.l	codearokie_frame_5
-	dc.l	codearokie_frame_6
-	dc.l	codearokie_frame_7
-	dc.l	codearokie_frame_8
-	dc.l 	-1
-codearokie_pointer:
-	dc.l	codearokie_frame_pointers
-
-codearokie_frame_1:
-	dc.l	frame1_text1
-	dc.w	0, 20-1
-	dc.l	frame1_text2
-	dc.w	5, 20-1
-	dc.l	frame1_text3
-	dc.w	8, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-codearokie_frame_2:
-	dc.l	frame2_text1
-	dc.w	0, 20-1
-	dc.l	frame2_text2
-	dc.w	7, 20-1
-	dc.l	frame2_text3
-	dc.w	9, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-codearokie_frame_3:
-	dc.l	frame3_text1
-	dc.w	0, 20-1
-	dc.l	frame3_text2
-	dc.w	7, 20-1
-	dc.l	frame3_text3
-	dc.w	10, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-codearokie_frame_4:
-	dc.l	frame4_text1
-	dc.w	0, 40-1
-	dc.l	frame4_text2
-	dc.w	4, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-codearokie_frame_5:
-	dc.l	frame5_text1
-	dc.w	0, 20-1
-	dc.l	frame5_text2
-	dc.w	7, 20-1
-	dc.l	frame5_text3
-	dc.w	13, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-codearokie_frame_6:
-	dc.l	frame6_text1
-	dc.w	0, 20-1
-	dc.l	frame6_text2
-	dc.w	6, 20-1
-	dc.l	frame6_text3
-	dc.w	11, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-codearokie_frame_7:
-	dc.l	frame7_text1
-	dc.w	0, 40-1
-	dc.l	frame7_text2
-	dc.w	5, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-codearokie_frame_8:
-	dc.l	frame8_text1
-	dc.w	0, 40-1
-	dc.l	frame8_text2
-	dc.w	4, 20-1
-	dc.l	-1
-	dc.w	-1, 20-1
-
-frame1_text1 dc.b 'Join', 0
-frame1_text2 dc.b 'in', 0
-frame1_text3 dc.b 'folks!!', 0
-
-frame2_text1 dc.b 'MOVE.L', 0
-frame2_text2 dc.b '4,', 0
-frame2_text3 dc.b '$70', 0
-
-frame3_text1 dc.b 'MOVE.W', 0
-frame3_text2 dc.b '55,', 0
-frame3_text3 dc.b '+(A9,D10)', 0
-
-frame4_text1 dc.b 'TAS', 0
-frame4_text2 dc.b '$DD068.W', 0
-
-frame5_text1 dc.b 'MOVE.w', 0
-frame5_text2 dc.b '+(A3),', 0
-frame5_text3 dc.b 'A8', 0
-
-frame6_text1 dc.b 'CMP.B', 0
-frame6_text2 dc.b '#678,', 0
-frame6_text3 dc.b 'A12', 0
-
-frame7_text1 dc.b 'DROP', 0
-frame7_text2 dc.b '<<FRAME>>', 0
-
-frame8_text1 dc.b 'RTS', 0
-frame8_text2 dc.b '!!!!!', 0
-	even
-
+	include	demoparts/codearokie.s		; "Codearokie" and "Basil" screens
 	include demoparts/yogie.s			; "Yogie Baird", "Steptool and Son", and "Man from UNCLE" screens.
 	include demoparts/testcard.s		; "Do you remember old telly?" and "Test Card" screens.
 	
@@ -1361,7 +1160,7 @@ pic_presents:
 	incbin graphics/packed/presents.pi3
 	even
 
-pic_steptoe_and_son:
+pic_steptool_and_son:
 	incbin graphics/packed/steptool.pi3
 	even
 	

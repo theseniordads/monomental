@@ -26,9 +26,9 @@ yogie_baird:
 	rts
 
 * "STEPTOOL AND SON" screen.
-steptoe_and_son:
+steptool_and_son:
 	jsr		swap_screens
-	lea		pic_steptoe_and_son,a0		; Depack the "Steptool and Son" pic onto the Telly Scan source buffer
+	lea		pic_steptool_and_son,a0		; Depack the "Steptool and Son" pic onto the Telly Scan source buffer
 	lea		screen3-34,a1
 	jsr		depack
 	move.l	#screen3,telly_scan_source	; Start the Telly Scanner
