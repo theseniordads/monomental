@@ -198,5 +198,8 @@ Again, we were dreading this one, and it appeared we were right to do so, as the
 
 However, it turned out to be just a couple of typos in our code that caused both, so it was actually easy to fix!
 
+### "Prodigy Tribute" aka "Smack My Bitch Up" screen
+Ran first time! To be honest, this was quite a simple screen, so we weren't expecting any major problems here.
+
 # MORE TO COME!
 
