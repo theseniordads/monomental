@@ -204,5 +204,12 @@ Ran first time! To be honest, this was quite a simple screen, so we weren't expe
 ### "Tri-di Donut" screen
 Another biggie, and upon our first trial run, it didn't appear at all! So we suspected something had gone wrong right at the prep stage. Sure enough, we found a couple of typos that caused a crash. Once we fixed those, everything worked fine!
 
+### "Greetings" screen
+Another potential biggie, as we were expecting the similar issues to the "Codearokie" screen, with some
+possible typos in the text and positioning! But in fact, the first thing we noticed upon first run was that it crashed immediately after displaying the first greet!
+
+It turns out the greets table was missing the timing data that the original demo had, so the first greeting would display fine, but after that the pointer to the greetings table would be pointing to some crashable data!
+Luckily after a look at the disassembled code, we were able to extract those values, and put them into our code, (It was mostly the same values, anyway!) and the screen worked!
+
 # MORE TO COME!
 

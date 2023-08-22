@@ -49,7 +49,7 @@
 	jsr		doctor_who
 	bsr		smack_my_bitch_up
 	jsr		tridi_donut
-;	jsr		greetings
+	jsr		greetings
 ;	jsr		man_from_uncle
 ;	jsr		mono_mental_titles
 ;	jsr		credits
@@ -942,119 +942,8 @@ sort_screen_pointers:
 	movem.l	d0-d1,front
 .sorted
 	rts
-			
-greetings:
-	set_clicks	#639
-	lea		pic_greetings,a0
-	jsr		depack_pic_to_back
-	jsr		swap_screens
-	movem.l	d6-d7,-(a7)
-	move	#80,d7
-	subq.l	#1,d7
-td_wait_loop21:
-	wait_click
-	dbf	d7,td_wait_loop21
-	movem.l	(a7)+,d6-d7
-	lea		greets_list_ptr,a5
-greets_loop:
-	move.l	(a5)+,d0
-	tst.l	d0
-	beq.s	greets_end
-	movea.l	d0,a0
-	movea.l	front,a1
-	move	(a5)+,d0
-	move	(a5)+,d1
-	jsr		font_string_mono
-	movem.l	d6-d7,-(a7)
-	move	(a5)+,d7
-	subq.l	#1,d7
-td_wait_loop22:
-	wait_click
-	dbf		d7,td_wait_loop22
-	movem.l	(a7)+,d6-d7
-	bra.s	greets_loop
 
-greets_end:
-	moveq	#5,d0
-	jsr		do_bombs_mono
-	wait_until_end_clicks
-	rts
-
-pic_greetings:
-	incbin graphics/packed/hole.pi3
-	even
-pic_donut1:
-	incbin graphics/packed/donut1.pi3
-	even
-pic_donut2:
-	incbin graphics/packed/donut2.pi3
-	even
-
-greets_list_ptr:
-	dc.l	txt_greet1
-	dc.w	7, 0
-	dc.l	txt_greet2
-	dc.w	4, 32
-	dc.l	txt_greet3
-	dc.w	7, 370
-	dc.l	txt_greet4
-	dc.w	9, 64
-	dc.l	txt_greet5
-	dc.w	10, 50
-	dc.l	txt_greet6
-	dc.w	5, 150
-	dc.l	txt_greet7
-	dc.w	7, 100
-	dc.l	txt_greet8
-	dc.w	8, 350
-	dc.l	txt_greet9
-	dc.w	7, 250
-	dc.l	txt_greet10
-	dc.w	6, 200
-	dc.l	txt_greet11
-	dc.w	5, 75
-	dc.l	txt_greet12
-	dc.w	10, 225
-	dc.l	txt_greet13
-	dc.w	5, 125
-	dc.l	txt_greet14
-	dc.w	4, 325
-	dc.l	txt_greet15	
-	dc.w	8, 275
-	dc.l	txt_greet16
-	dc.w	8, 175
-	dc.l	txt_greet17
-	dc.w	5, 25
-	dc.l	txt_greet18
-	dc.w	5, 375
-	dc.l	txt_greet19
-	dc.w	5, 300
-	dc.l	txt_greet20
-	dc.w	3, 384
-	dc.l	0
-
-txt_greet1:		dc.b 'GREETS 2:', 0
-txt_greet2:		dc.b 'Everyone at ALT!', 0
-txt_greet3:		dc.b 'Hello!', 0
-txt_greet4:		dc.b 'MAGIE TEEM!', 0
-txt_greet5:		dc.b 'Rejexct!', 0
-txt_greet6:		dc.b 'reservoir Frogs!', 0
-txt_greet7:		dc.b '#atari IRC!', 0
-txt_greet8:		dc.b 'Network mag!!!', 0
-txt_greet9:		dc.b 'Undercuver mag!', 0
-txt_greet10:	dc.b 'Mystik Bites!', 0
-txt_greet11:	dc.b 'ded Hacxers Soc!', 0
-txt_greet12:	dc.b 'ipir!', 0
-txt_greet13:	dc.b 'Rasero Team- NOT!', 0
-txt_greet14:	dc.b 'Mystik Bites!', 0
-txt_greet15:	dc.b 'Bill Gates- our hero!', 0
-txt_greet16:	dc.b 'Sin BAD!', 0
-txt_greet17:	dc.b 'ST Pluz!', 0
-txt_greet18:	dc.b 'Atari Computing!!!', 0
-txt_greet19:	dc.b 'Father Michael!!', 0
-txt_greet20:	dc.b '<< and any 1 else!!', 0
-	even
-
+	include demoparts/greeting.s		; "Greetings" screen- and "Tri-di Donut" graphics!
 	include	demoparts/codearokie.s		; "Codearokie" and "Basil" screens
 	include demoparts/yogie.s			; "Yogie Baird", "Steptool and Son", and "Man from UNCLE" screens.
 	include demoparts/testcard.s		; "Do you remember old telly?" and "Test Card" screens.
