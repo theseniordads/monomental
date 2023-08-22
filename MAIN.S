@@ -50,7 +50,7 @@
 	bsr		smack_my_bitch_up
 	jsr		tridi_donut
 	jsr		greetings
-;	jsr		man_from_uncle
+	jsr		man_from_uncle
 ;	jsr		mono_mental_titles
 ;	jsr		credits
 ;	jsr		the_end

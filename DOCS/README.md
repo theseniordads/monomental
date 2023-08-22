@@ -211,5 +211,8 @@ possible typos in the text and positioning! But in fact, the first thing we noti
 It turns out the greets table was missing the timing data that the original demo had, so the first greeting would display fine, but after that the pointer to the greetings table would be pointing to some crashable data!
 Luckily after a look at the disassembled code, we were able to extract those values, and put them into our code, (It was mostly the same values, anyway!) and the screen worked!
 
+### "Man From UNCLE" screen
+Worked perfectly, even down to the unexpected return of the donut!
+
 # MORE TO COME!
 
