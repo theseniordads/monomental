@@ -48,7 +48,7 @@
 	jsr		steptool_and_son
 	jsr		doctor_who
 	bsr		smack_my_bitch_up
-;	jsr		tridi_donut
+	jsr		tridi_donut
 ;	jsr		greetings
 ;	jsr		man_from_uncle
 ;	jsr		mono_mental_titles
@@ -545,91 +545,8 @@ bmp_credit_dame_vera_lynn	equ bmp_crew2+34
 bmp_credit_colostomy_bag	equ bmp_credit_dame_vera_lynn+24
 bmp_credit_sd_logo			equ bmp_credit_colostomy_bag+24
 	even
-	
-tridi_donut: 
-	set_clicks	#$95
-	jsr 	sort_screen_pointers
-	move.l 	screen3,a0
-	jsr 	black_screen
-	move.l 	screen3,a1
-	lea 	txt_tridi_donut,a0
-	move	#3,d0
-	move	#150,d1
-	jsr		font_string_mono
-	wait_vbl
-	set_vidaddr screen3
-	lea		pic_donut1,a0
-	jsr		depack_pic_to_back
-	movea.l	back,a0
-	suba.l	#32000,a0
-	jsr		black_screen
-	wait_until_end_clicks
-	moveq	#2,d6
-	movea.l	back,a0
-	suba.l	#32000,a0
-td_in_loop:
-	adda	#8000,a0
-	wait_vbl
-	set_vidaddr a0
-	set_clicks 	#80-1
-	wait_until_end_clicks
-	dbf	d6,td_in_loop
-	move	#79,click_counter
-	adda	#8000,a0
-	wait_vbl
-	set_vidaddr a0
-	lea		pic_donut2,a0
-	movea.l	front,a1
-	lea		-34(a1),a1
-	jsr		depack
-	movea.l	back,a0
-	adda.l	#32000,a0
-	jsr		black_screen
-	wait_until_end_clicks
-	jsr		swap_screens
-	set_clicks	#640-1
-td_anim_loop1:
-	wait_vbl
-	jsr		swap_screens
-	movem.l	d6-d7,-(a7)
-	move	#19,d7
-	subq.l	#1,d7
-td_wait_loop1:
-	wait_click
-	dbf	d7,td_wait_loop1
-	movem.l	(a7)+,d6-d7
-	tst		click_counter
-	bgt.s	td_anim_loop1
-	jsr		swap_screens
-	movea.l	back,a0
-	move	#3,d7
-td_out_loop:
-	wait_vbl
-	set_vidaddr	a0
-	adda	#8000,a0
-	set_clicks	#79
-	wait_until_end_clicks
-	dbf		d7,td_out_loop
-	set_clicks	#319
-td_anim2_loop:
-	wait_vbl
-	jsr		swap_screens
-	movem.l	d6-d7,-(a7)
-	move	#19,d7
-	subq.l	#1,d7
-td_wait_loop2:
-	wait_click
-	dbf	d7,td_wait_loop2
-	movem.l	(a7)+,d6-d7
-	tst		click_counter
-	bgt.s	td_anim2_loop
-	rts
 
-txt_tridi_donut:
-	dc.b 	'Time for tea', 13
-	dc.b   	' and DONUTS!!!!', 0
-	even
-
+	include demoparts/donut.s			; "Tri-di Donut" screen.
 	include demoparts/present.s			; "Senior Dads present..." screen.
 	include demoparts/title.s			; "Titles" and "Intro pics" screens.
 
@@ -930,8 +847,8 @@ invert_stuffs:
 ; d2 = plane
 
 font_string
-	add	d2,d2				{ - move to plane in screen 
-	lea	(a1,d2.w),a1			{
+	add	d2,d2					; { - move to plane in screen 
+	lea	(a1,d2.w),a1			; {
 	lsl.w	#3,d0				; Move to..
 	lea	(a1,d0.w),a1			; ..X-position
 	mulu	#160,d1				; Move to..
@@ -950,16 +867,16 @@ font_string
 	lsl.l	#6,d0				;   Multiply by length (64 bytes) of single char
 	lea	(a2,d0.w),a3			;   Now a3 = bitmap representation of char
 i	set	0
-	REPT	16				{
-	move	(a3)+,i(a4)			{ - Copy letter bitmap to screen
-	move	(a3)+,i+8(a4)			{
-i	set	i+160				{
+	REPT	16					; {
+	move	(a3)+,i(a4)			; { - Copy letter bitmap to screen
+	move	(a3)+,i+8(a4)		; {
+i	set	i+160					; {
 	ENDR
 	adda.l	#16,a4				;   Move forward to next char position on screen
-	bra	.loop				; Do next character
+	bra	.loop					; Do next character
 .exit	rts
 
-* Print text using a 32X16 font
+* Print text using a 32X16 font in ST monochrome mode
 ; a0 = string
 ; a1 = screen
 ; d0,d1 = x,y

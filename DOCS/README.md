@@ -188,9 +188,9 @@ It worked first time!!!! We were dreading this one, and all for nothing! We spen
 
 ### "Codearokie" and "Basil" screens
 We were also dreading this one too, as there was so many fiddly bits with text pointers and timing tables!
-But it turns out that only the Codearokie "frame" data needed debugging, and it was mostly small typos affecting the positioning and timing, and there wasn't even much of that! The only real biggie was some missing data for the last frame, which the code interepreted as *"sit around and do nothing for a very long time"*!
+But it turns out that only the Codearokie "frame" data needed debugging, and it was mostly small typos affecting the positioning and timing, and there wasn't even much of that! The only real biggie was some missing data for the last frame, which the 68000 processor interpreted as *"sit around and do nothing for a very long time"*!
 
-### "Steptool and Son" 
+### "Steptool and Son" screen
 Worked first time, but we were less surprised as this uses the code from the "Yogie Baird" screen!
 
 ### "Doctor Who" screen
@@ -200,6 +200,9 @@ However, it turned out to be just a couple of typos in our code that caused both
 
 ### "Prodigy Tribute" aka "Smack My Bitch Up" screen
 Ran first time! To be honest, this was quite a simple screen, so we weren't expecting any major problems here.
+
+### "Tri-di Donut" screen
+Another biggie, and upon our first trial run, it didn't appear at all! So we suspected something had gone wrong right at the prep stage. Sure enough, we found a couple of typos that caused a crash. Once we fixed those, everything worked fine!
 
 # MORE TO COME!
 
