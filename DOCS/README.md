@@ -192,3 +192,11 @@ But it turns out that only the Codearokie "frame" data needed debugging, and it 
 
 ### "Steptool and Son" 
 Worked first time, but we were less surprised as this uses the code from the "Yogie Baird" screen!
+
+### "Doctor Who" screen
+Again, we were dreading this one, and it appeared we were right to do so, as the starfield only partially appeared, and the screen locked up after a while!
+
+However, it turned out to be just a couple of typos in our code that caused both, so it was actually easy to fix!
+
+# MORE TO COME!
+
