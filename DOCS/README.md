@@ -146,19 +146,19 @@ Now to get it running on an Atari...
 
 We tried to modify our `.vscode/tasks.json` to copy the compiled binary to the Atari hard drive each time it was built, but it just wasn't working, and any documentation or forum talk about it on the internet was as helpful as going to someone in the street and asking them how to get to the nearest railway station, and them replying: *"Oh it's easy! Just fold the fabric of spacetime, and it'll come to **you**!"*! So in the, we just changed the build directory in the Amiga Assembly settings to go to the Atari hard drive, which is probably not the best way to go aboout it, but at least it worked for now. We could now point HRDB to that executable for debugging purposes.
 
-What we decided then was to comment out all the calls to the demo parts, and just uncomment them one at a time as we went through the debugging process. We were also thinking about spliting the source into a series of demopart includes. We were aiming for a buiuld that is faithful (almost!) to the originab binary, but given the original source almost certainly no longer exist, aiming for *source code* fidelity would be a bit silly!
+What we decided then was to comment out all the calls to the demo parts, and just uncomment them one at a time as we went through the debugging process. We were also thinking about splitting the source into a series of demopart includes. We were aiming for a build that is faithful (almost!) to the originab binary, but given the original source almost certainly no longer exist, aiming for *source code* fidelity would be a bit silly!
 
 ### Save and restore routines
 
 First thing we wanted to check, before any of the demo parts, was the save and restore routines. Can the problem show the text intro, check for a mono monitor, and then exit cleanly?
 
-Well, we gave a go, and straight away, we noticed something wrong, and it was from the most unexpected place- the text intro! In the last line, in the word "space", "e" is replace with "£". However the ASCII character code for "£" on the Atari is different from the UTF-8 the source code is saved as, so it compiled as UTF-8 "£", mucking up the last line of the text intro! We fixed that by replacing the "£" with the Atari ASCII character code for "£". We also check for the monitor type, and that was the Save  routines ready to go!
+Well, we gave a go, and straight away, we noticed something wrong, and it was from the most unexpected place- the text intro! In the last line, in the word "space", "e" is replaced with "£". However the ASCII character code for "£" on the Atari is different from the UTF-8 the source code is saved as, so it compiled as UTF-8 "£", mucking up the last line of the text intro! We fixed that by replacing the "£" with the Atari ASCII character code for "£". We also check for the monitor type, and that was the Save routines ready to go!
 
-On the restore routines, the only problem we found that the code didn't take to kindly to stopping a piece of music it hadn't even started playing yet! However, ever we commented that line out, restore rotuines worked fine.
+On the restore routines, the only problem we found that the code didn't take to kindly to stopping a piece of music it hadn't even started playing yet! However, ever we commented that line out, restore routines worked fine.
 
 ### "Present..." screen
 
-An important milestone, as it's the first time the demo starts playing music and depacking a picture and displaying it! So we were a bit concerned when it did neither upon first run! The problem seemed to be occuring when the music was first being initialised and the processor jumped into the initialisation routines of the music file, and swiftly disappeared down a rabbit hole! We looked at  the music file in the memory panel of HRDB, and thought *"Hmmm, that doesn't look like the 3 BRAs we were expecting at the start of the music file!"* Was the file corrupted? When we resetted and looked again at the music file in the memory panel again, it appeared to be fine *before* we ran the program, so something must have corrupted it in the meantime!
+An important milestone, as it's the first time the demo starts playing music and depacking a picture and displaying it! So we were a bit concerned when it did neither upon first run! The problem seemed to be occuring when the music was first being initialised and the processor jumped into the initialisation routines of the music file, and swiftly disappeared down a rabbit hole! We looked at the music file in the memory panel of HRDB, and thought *"Hmmm, that doesn't look like the 3 BRAs we were expecting at the start of the music file!"* Was the file corrupted? When we resetted and looked again at the music file in the memory panel again, it appeared to be fine *before* we ran the program, so something must have corrupted it in the meantime!
 
 Sure enough, we tracked it down to the screen depack routine that was run before the music was initialised. It appeared to be depacking the screen all over the music files! But why was it doing this, when it never did this before? We looked the depack code include, (The standard Atomik depack routine included with the packer.) and realised it was in it's default mode of depacking data to the same place as the packed data! As the "Presents..." pic was close to the music files in the program data, that means it was corrupting those files before they had a chance to run!
 
@@ -213,6 +213,16 @@ Luckily after a look at the disassembled code, we were able to extract those val
 
 ### "Man From UNCLE" screen
 Worked perfectly, even down to the unexpected return of the donut!
+
+### "Mono-mental" titles- again!
+We needed to the check the second appearance of the titles didn't mess anything up- and it didn't!
+
+### "Credits" screen!
+The only bit we found we got wrong here was copying the correct width of the bitmap for the crew logos,
+but that was an easy fix!
+
+### The ending aka "White Dot" screen
+This initally looked good when it started, but then we found that the fake crash ending actually crashed for real! We found that this was another silly typo where we needed to `even` after some data!
 
 # MORE TO COME!
 
