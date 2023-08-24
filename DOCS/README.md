@@ -222,7 +222,9 @@ The only bit we found we got wrong here was copying the correct width of the bit
 but that was an easy fix!
 
 ### The ending aka "White Dot" screen
-This initally looked good when it started, but then we found that the fake crash ending actually crashed for real! We found that this was another silly typo where we needed to `even` after some data!
+This initally looked good when it started, but then we found that the fake crash ending actually crashed for real! We found that this was another silly typo where we needed to do an `even` after some data!
+
+Another small change was that the crash music (Which was a combination of our "standard" crash music, and playing the main music in super fast-forward!) was that the crash was ending on the wrong note! We found that re-initialising the music file after the crash music had finished fixed things.
 
 # MORE TO COME!
 

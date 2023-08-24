@@ -33,7 +33,7 @@ greets_wait_loop2:								; (Yep, we should have definately done with another cl
 	movem.l	(a7)+,d6-d7
 	bra.s	greets_loop							; Continue with next greet
 greets_end:
-	moveq	#5,d0
+	moveq	#5,d0								; ZERO DIVIDE ERROR!
 	jsr		do_bombs_mono
 	wait_until_end_clicks
 	rts

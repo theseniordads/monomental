@@ -53,7 +53,7 @@
 	jsr		man_from_uncle
 	jsr		mono_mental_titles
 	jsr		credits
-;	jsr		the_end
+	jsr		the_end
 	bsr		ret
 	movea.l	old_stack,a7
 	rts
@@ -133,111 +133,8 @@ hi_res_you_wally:
 	dc.b 'upgrade your equipment and your', 13, 10
 	dc.b 'braincells, you total thicko!!!', 0
 
-* THE ENDING AKA "WHITE DOT" SCREEN:
-; Why this is the first demo part in our code, we don't know!
-the_end:
-	move	#70-1,click_counter
-	movea.l	back,a0
-	jsr		black_screen
-	movea.l	back,a1
-	lea		txt_end_dot,a0
-	move	#10,d0
-	move	#200,d1
-	jsr		font_string_mono
-	wait_until_end_clicks
-	jsr		swap_screens
-	bsr		doctor_who_set_up_starfield
-	lea		txt_end_the_end,a0
-	moveq	#2,d0
-	bsr		bottom_screen_title
-	set_clicks	#280-1
-	wait_until_end_clicks
-	move	#19,click_counter
-	move	#17,d7
-end_anim_loop:
-	movem.l	d7,-(a7)
-	bsr		scroll_starfield
-	bsr		add_bottom_screen_title
-	jsr	swap_screens
-	wait_until_end_clicks
-	move	#19,click_counter
-	movem.l	(a7)+,d7
-	dbf	d7,end_anim_loop
-	wait_until_end_clicks
-	set_clicks	#320-1
-	movea.l	back,a0
-	jsr		black_screen
-	movea.l	back,a1
-	lea	txt_end_yes,a0
-	move	#10,d0
-	move	#200,d1
-	jsr		font_string_mono
-	wait_vbl
-	jsr		swap_screens
-	movea.l	back,a1
-	lea		4.w,a2
-	move	#(32000/4)-1,d0
-.copy:
-	move.l	(a0)+,(a1)+
-	dbf	d0,.copy
-	wait_until_end_clicks
-	wait_vbl
-	jsr		swap_screens
-	jsr		stop_music
-	jsr		mus_crash
-	jsr		mus_crash+8
-	wait_for	#300
-	jsr		mus_crash+4
-	moveq	#6,d0
-	jsr		do_bombs_mono
-	move.l	#6000-1,d0
-.sound_loop:
-	jsr		mus_monomental_main+8
-	dbf	d0,.sound_loop
-	moveq	#11,d0
-	jsr		do_bombs_mono
-	movem.l	d0-d1,-(a7)
-	wait_for	#100
-	movem.l	(a7)+,d0-d1
-	jsr		mus_monomental_main+4
-	rts
-
-txt_end_dot:
-	dc.b	'.', 0
-txt_end_the_end:
-	dc.b	'The end?', 0
-	even
-txt_end_yes:				; This needs to be on an even byte boundry as we're copying by longwords from here later!
-	dc.b	'YES', 0
-	even
-
-senior_text_intro:
-	print_string #.senior_intro_text
-	move	#400,timer.w
-.wait:
-	tst		timer.w
-	blt.s	.exit
-	cmpi.b	#space_bar,ikbd.w
-	bne.s 	.wait
-.exit:
-	rts
-
-.senior_intro_text:
-	dc.b 27, 'E'
-	incbin	graphics\senior_l.ogo
-	dc.b 13,10
-senior_text:
-	dc.b 'SENI0R dadS!!!',13,10
-	dc.b '  .... Prezents!',13,10,10
-	dc.b '    M   O   N  O M  e   N  TT   A   L   !!!',13,10,10
-	dc.b 'A fabby-dabby-dooby-TUBBY!!   DEMO!',13,10,10
-	dc.b '  DIS DEMO works **&&Any&&** komputers made by',13,10
-	dc.b 'ATARI!!!   C-LAB!!!!    JTS!!!!!   HASBRO!!!',13,10,10,10
-	dc.b '                  (except the 8-bit ones- sorry!!)',13,10,10
-	dc.b ' yA needs a MOTOROLA chip for da procesaa!! And ONE mega memory!',13,10,10
-	dc.b '<Wait a little time to prepare yourselfs!!! or press SPAC', $9c, '!>',0
-	even
-
+	include demoparts/the_end.s			; "The End" aka "White dot" screen.
+	include demoparts/seniortx.s		; Text intro.
 	include demoparts/smbu.s			; "Prodigy Tribute" aka "Smack My Bitch Up" screen.
 	include demoparts/who_cred.s		; "Doctor Who" and "Credits" screen
 	include demoparts/donut.s			; "Tri-di Donut" screen.
