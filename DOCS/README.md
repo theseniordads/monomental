@@ -222,9 +222,24 @@ The only bit we found we got wrong here was copying the correct width of the bit
 but that was an easy fix!
 
 ### The ending aka "White Dot" screen
-This initally looked good when it started, but then we found that the fake crash ending actually crashed for real! We found that this was another silly typo where we needed to do an `even` after some data!
+This initally looked good when it started, but then we found that the fake crash ending actually crashed for real! We found that this was another silly typo where we needed to do an `even` after some data so it
+wouldn't cause an address error!
 
 Another small change was that the crash music (Which was a combination of our "standard" crash music, and playing the main music in super fast-forward!) was that the crash was ending on the wrong note! We found that re-initialising the music file after the crash music had finished fixed things.
+
+### Fixing the "static" music
+
+Now that all the demo parts were working, we just need to fix the problem of the "static" music not playing.
+We suspected that with the Adrenaline Ripper not ripping the music the right way for the main music (To be fair, it appeared to recognise it as a different format of music to Megatizer.), then the same might be true for the "static" music. So, given that it wasn't a large piece of music, we could probably just go into MONST2 in an instance of Hatari, load in the original demo, and rip the music from there.
+
+So, we noted all the addresses of the music files in MONST2 as we knew there were all bunched together in the
+data, so we figured that if it's inbetween othe music files, we can work out it's length! Unfortunately, it
+was right at the *end* of the music files! Luckily the memory address of old screen pointer is saved in the
+address right after the end of the music files, so we were able to get the length that way.
+
+When we looked at the length of the ripped music, we were a bit concerned as it was 4K long, rather than the
+Adrenaline Ripper version, which was 10K! But we played it in Megatizer, and it seemed okay. So we plugged the newly ripped music in- still nothing! We then noticed the call to play the music file was `jsr mus_static + 8`, and thought *"Ono!! It can't the assembler being picky about spaces again?!?!"* So we changed it to `jsr mus_static+8`, and it worked!
+
 
 # MORE TO COME!
 

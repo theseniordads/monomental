@@ -60,7 +60,7 @@ end_anim_loop:
 	moveq	#6,d0
 	jsr		do_bombs_mono						; CHK ERROR!
 	jsr 	mus_monomental_main					; Now we play the main music again, but instead of using
-	move.l	#6000-1,d0							; ... interrupts to play, we're playing it manuallly in a loop
+	move.l	#6000-1,d0							; ... interrupts to play, we're playing it manually in a loop
 .sound_loop:									; ... resulting in a super fast-forward splurge of sound!
 	jsr		mus_monomental_main+8
 	dbf	d0,.sound_loop

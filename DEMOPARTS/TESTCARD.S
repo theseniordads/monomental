@@ -30,7 +30,7 @@ test_card:
 	jsr		black_screen
 	jsr		stop_music				; Stop the fanfare music
 	jsr		mus_static				; Initialise the static music
-	jsr		mus_static + 8			; Play the static music. We only need to this once, as we're just wanting the initial sound.
+	jsr		mus_static+8			; Play the static music. We only need to this once, as we're just wanting the initial sound.
 	move	#200,timer.w			; For 200 frames...
 .animate_static:
 	jsr		swap_screens			; Swap and display the front and back screens to animate the static

@@ -445,7 +445,8 @@ font_string
 	mulu	#160,d1				; Move to..
 	lea	(a1,d1.w),a1			; ..Y-position
 	move.l	a1,a4				; Get starting position
-.loop	lea	main_font,a2			; Get font ready
+.loop:
+	lea	main_font,a2			; Get font ready
 	moveq	#0,d0
 .ag	move.b	(a0)+,d0			; Get character
 	beq	.exit				; Until at end of string...
@@ -565,6 +566,9 @@ front:			dc.l	screen1
 back:			dc.l	screen2
 scratch_screen:	dc.l	screen3
 
+mus_crash:
+	incbin 	music/crash.thk
+	even
 mus_sd_fanfare:
 	incbin	music/fanfare.thk
 	even
@@ -576,9 +580,6 @@ mus_monomental_main:
 	even
 mus_static:
 	incbin 	music/static.thk
-	even
-mus_crash:
-	incbin 	music/crash.thk
 	even
 	
 	bss
