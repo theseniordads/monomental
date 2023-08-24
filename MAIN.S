@@ -20,7 +20,7 @@
 
  ****** NOTE: WE'RE STIL WORKING ON THIS! ******
 
-;FINAL_VERSION							; < Comment for labels and faster assembly
+FINAL_VERSION							; < Comment for labels and faster assembly
 
  	IFD	FINAL_VERSION
 	opt	d-
@@ -141,6 +141,8 @@ hi_res_you_wally:
 	include demoparts/present.s			; "Senior Dads present..." screen.
 	include demoparts/title.s			; "Titles" and "Intro pics" screens.
 
+* COPY FRONT SCREEN TO BACK SCREEN:
+; Errr, guess what this routine does!
 copy_front_to_back:
 	movea.l	front,a0
 	movea.l	back,a1
@@ -150,22 +152,25 @@ copy_front_to_back:
 	dbf		d0,.copy
 	rts
 
+* DISPLAY TOS BOMBS ON SCREEN:
+; Adapted for hi-res from a lo-res routine used in "Air Dirt"
 do_bombs_mono:
 	movea.l	front,a1
-	adda.l	#16000,a1
+	adda.l	#16000,a1				; Go to middle of screen in vertical terms
 	lea		bmp_bomb,a0
 .bomb:
 i	set 	0
 j 	set		0
-	REPT	30/2
-	move	i(a0),j(a1)
+	REPT	30/2					; Plonk 16x30 bomb on screen buffer
+	move	i(a0),j(a1)				; 16 pixel line
 i	set		i+2
-j	set		j+80
+j	set		j+80					; Go to line below
 	ENDR
-	addq.l	#2,a1
+	addq.l	#2,a1					; Do next bomb on next 16 pixel boundry
 	dbf	d0,.bomb
 	rts
 
+* Here's the bitmap for the bomb- copied out of a TOS source listing in ST Internals!
 bmp_bomb:
 	dc.w	%0000011000000000
 	dc.w	%0010100100000000
@@ -184,6 +189,10 @@ bmp_bomb:
 	dc.w	%0000001111111000
 	dc.w	%0000000011100000
 
+* PLOT BITMAP ANIMATION FRAME:
+; Plots a 192x288 bitmap to a screen buffer.
+; a4 = source bitmap on a PI3 file in memory
+; a5 = destination screen buffer
 plot_bitmap_anim_frame:
 	move	#288-1,d0
 .copy:
@@ -199,333 +208,91 @@ i 	set 	i+2
 	wait_for #1
 	rts
 
-	movem.l	d0/a0,-(a7)
-	move.l	#L147164,-(a7)
-	move	#9,-(a7)	; Cconws
-	trap	#1		; Gemdos
-	addq.l	#6,a7
-	movem.l	(a7)+,d0/a0
-	move.l	#32,d6
-	movea.l	1102.w,a5
-	lea	L147172,a6
-	move	#93,d7
-L147096:
-	move.b	d6,L147170
-	addq.l	#1,d6
-	movem.l	d0/a0,-(a7)
-	move.l	#L147168,-(a7)
-	move	#9,-(a7)	; Cconws
-	trap	#1		; Gemdos
-	addq.l	#6,a7
-	movem.l	(a7)+,d0/a0
-	move.b	0(a5),(a6)+
-	move.b	160(a5),(a6)+
-	move.b	320(a5),(a6)+
-	move.b	480(a5),(a6)+
-	move.b	640(a5),(a6)+
-	move.b	800(a5),(a6)+
-	move.b	960(a5),(a6)+
-	move.b	1120(a5),(a6)+
-	dbf	d7,L147096
-	rts
-
-L147164:move.b	-(a2),12544(a5)
-L147168:dc	6984
-L147170:ori.b	#0,d0
-L147172	=	*-2
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-L147307	=	*-3
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-L147646:ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	ori.b	#0,d0
-	dc	0
-
+* INVERT STUFFS:
+; Errr, actually, the only thing that's inverted here is the font! We do this 
+; because in monochrome mode on the ST, the colour 0 is white, and the colour 1
+; is black!
 invert_stuffs:
 	lea		main_font,a0
 	move	#3999,d0
 .loop:
-	not.w	(a0)+
+	not.w	(a0)+			; Invert 
 	dbf	d0,.loop
 	rts
 
-* Print text using a 32X32 font
-; a0 = string
-; a1 = screen
-; d0,d1 = x,y
-; d2 = plane
-
-font_string
-	add	d2,d2					; { - move to plane in screen 
-	lea	(a1,d2.w),a1			; {
-	lsl.w	#3,d0				; Move to..
-	lea	(a1,d0.w),a1			; ..X-position
-	mulu	#160,d1				; Move to..
-	lea	(a1,d1.w),a1			; ..Y-position
-	move.l	a1,a4				; Get starting position
-.loop:
-	lea	main_font,a2			; Get font ready
-	moveq	#0,d0
-.ag	move.b	(a0)+,d0			; Get character
-	beq	.exit				; Until at end of string...
-	cmp.b	#13,d0				;   If c/r detected...
-	bne.s	.fn
-	adda.l	#160*16,a1			;     Go down a line.
-	move.l	a1,a4				;     Update starting position
-	bra.s	.ag				;     Get another character
-.fn	subi.b	#' ',d0				;   Subtract base of font
-	lsl.l	#6,d0				;   Multiply by length (64 bytes) of single char
-	lea	(a2,d0.w),a3			;   Now a3 = bitmap representation of char
-i	set	0
-	REPT	16					; {
-	move	(a3)+,i(a4)			; { - Copy letter bitmap to screen
-	move	(a3)+,i+8(a4)		; {
-i	set	i+160					; {
-	ENDR
-	adda.l	#16,a4				;   Move forward to next char position on screen
-	bra	.loop					; Do next character
-.exit	rts
-
-* Print text using a 32X16 font in ST monochrome mode
-; a0 = string
-; a1 = screen
-; d0,d1 = x,y
+* PRINT TEXT USING 32X16 FONT IN ST MONO MODE:
+; Adapted for mono from a lo-res based routine used in "Air Dirt".
+;
+; a0 = Address of zero-byte terminated string
+; a1 = Address of destination screen buffer
+; d0 = x (in character units, each chcarcter is 32 pixels wide)
+; d1 = y (in pixels)
 font_string_mono:
 	movem.l	d0-d7/a0-a6,-(a7)
-	add	d0,d0
-	add	d0,d0
-	lea	(a1,d0.w),a1
-	mulu	#80,d1
-	lea	(a1,d1.w),a1
-	movea.l	a1,a4
+	add	d0,d0					; { Multiply by 4 to get the X starting position
+	add	d0,d0					; { ... of the text on the screen buffer
+	lea	(a1,d0.w),a1			; Set x position
+	mulu	#80,d1				; Multiply y by 80 (screen width) to get the y starting position
+	lea	(a1,d1.w),a1			; Set y position
+	movea.l	a1,a4				; Save x position
 .loop:
-	lea	main_font,a2
+	lea	main_font,a2			; Now we need to get the font data. (Maybe we could have put this outside the loop, as a2 isn't getting changed?)
 	moveq	#0,d0
 .ag:
-	move.b	(a0)+,d0
-	beq		.exit
-	cmp.b	#13,d0
-	bne.s	.fn
-	adda.l	#1280,a1
-	movea.l	a1,a4
-	bra.s	.ag
+	move.b	(a0)+,d0			; Get the current character from the string, and move the address to the next character
+	beq		.exit				; If it's a zero byte, then we're done!
+	cmp.b	#13,d0				; Is it a carriage return? ...
+	bne.s	.fn					; ... If not, continue.
+	adda.l	#16*80,a1			; ... If yes, move down 16 lines on the screen buffer ...
+	movea.l	a1,a4				; ... and save the new x,y position ...
+	bra.s	.ag					; ... and get the next character.	
 .fn: 
-	subi.b	#' ',d0
-	lsl.l	#6,d0
-	lea		(a2,d0.w),a3
+	subi.b	#' ',d0				; The font data starts with the space "character", so we subtract the ASCII value of a space
+	lsl.l	#6,d0				; Multiply by 64 to get the offset into the font data
+	lea		(a2,d0.w),a3		; Now we've got the address of the relevant letter in the font data!
 i 	set 	0
-	REPT	16	
-	move	(a3)+,i(a4)
-	move	(a3)+,i+2(a4)
-i 	set 	i+80
+	REPT	16					; Now we write the 16 lines of the character to the screen buffer
+	move	(a3)+,i(a4)			; (Notice how we're using a4 as the destination address? We're doing this so we
+	move	(a3)+,i+2(a4)		; ... can advance a4 by characters length on the screen buffer, whilst keeping a1 as the "start" of the line, which we can use as a basis for moving to the next "line"!)
+i 	set 	i+80				; Go to next line on screen buffer
 	ENDR
-	adda.l	#4,a4
-	bra	.loop
+	adda.l	#4,a4				; Move x position on the screen buffer to the next character
+	bra	.loop					; Do next character
 .exit:
 	movem.l	(a7)+,d0-d7/a0-a6
 	rts
 
+* Here's the 32x16 font- If want to see the source for this, 
+; look in the "Air Dirt" source code under "SRC_DATA/GFX/FONT.PC1".
+; (Obviously you'll need Degas or PC1 compatible software to view it!)
 main_font:
 	incbin 	graphics/bitmaps/crapfont.dat
 	even
 
+* CLEAR SCREEN TO BLACK:
+; a0 = Address of screen buffer
 black_screen:
-	moveq	#-1,d0
-	move	#(32000/4)-1,d1
+	moveq	#-1,d0				; Set 32px pixel strip to colour 1. Remember that in monochrome mode, colour 1 is black!
+	move	#(32000/4)-1,d1		; Blat the whole screen buffer with black!
 .loop:
 	move.l	d0,(a0)+
 	dbf	d1,.loop
 	rts
 
+* SWAP SCREENS AND DISPLAY CURRENT FRONT SCREEN:
 swap_screens:
-	movem.l	front,d0-d1
-	exg	d0,d1
-	movem.l	d0-d1,front
-	set_vidaddr	d0
+	movem.l	front,d0-d1			; The pointers for front and back screens are right next to each other in memory, so we can do this!
+	exg	d0,d1					; SWAP!
+	movem.l	d0-d1,front			; And save the new pointers
+	set_vidaddr	d0				; Display the new front screen
 	rts
 
+* SORT SCREEN POINTERS:
+; This sorts the screen pointers so that the front screen pointers points to the screen buffer
+; with the lower address compared to the pointer to the back screen. This was only used in the
+; "Tri-di Donut" screen, as we had to some sorting of the pointers in order to the hardware
+; scrolling effects on the donut to work. We porbably kept it seperate just in case we needed
+; it again.
 sort_screen_pointers:
 	movem.l	front,d0-d1
 	cmp.l	d0,d1

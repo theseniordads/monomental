@@ -232,7 +232,7 @@ Another small change was that the crash music (Which was a combination of our "s
 Now that all the demo parts were working, we just need to fix the problem of the "static" music not playing.
 We suspected that with the Adrenaline Ripper not ripping the music the right way for the main music (To be fair, it appeared to recognise it as a different format of music to Megatizer.), then the same might be true for the "static" music. So, given that it wasn't a large piece of music, we could probably just go into MONST2 in an instance of Hatari, load in the original demo, and rip the music from there.
 
-So, we noted all the addresses of the music files in MONST2 as we knew there were all bunched together in the
+So, we noted all the addresses of the music files in MONST2 as we knew they were all bunched together in the
 data, so we figured that if it's inbetween othe music files, we can work out it's length! Unfortunately, it
 was right at the *end* of the music files! Luckily the memory address of old screen pointer is saved in the
 address right after the end of the music files, so we were able to get the length that way.
@@ -240,6 +240,8 @@ address right after the end of the music files, so we were able to get the lengt
 When we looked at the length of the ripped music, we were a bit concerned as it was 4K long, rather than the
 Adrenaline Ripper version, which was 10K! But we played it in Megatizer, and it seemed okay. So we plugged the newly ripped music in- still nothing! We then noticed the call to play the music file was `jsr mus_static + 8`, and thought *"Ono!! It can't the assembler being picky about spaces again?!?!"* So we changed it to `jsr mus_static+8`, and it worked!
 
+## Cleaning up
+Now we had a working version of the demo, it was just a matter of cleaning up and annotating the remaining code! We also found there was a lot of crap code left by the dissassembly, which took up a lot of the space in the source. Once we cleared that up, and hived off the various demo parts into their own include files, the source code was a whopping 12.3K with 40.1K of include files, 52.4K in total. When you think that we started off with a 1383K disassembly source code file, that's quite a reduction, escpecially with the amount of commenting we added to the source code!
 
 # MORE TO COME!
 
