@@ -1,7 +1,5 @@
 # Mono-mental
 
-**NOTE: This is still being worked on! Don't expect this to work yet!**
-
 Full assembler source for the "Mono-mental" demo by The Senior Dads, which was released on the Atari 16 bit platform on the 11th April 1998 at the first ALT Party in Turku, Finland.
 
 This release is different to other demo source code releases from us in that it's not the original source, (which is lost), but a reverse-engineer of the source code from the original binary. The original binary was disassembled and the source code was re-created from the disassembly. The original graphics and sound were also re-created from the binary. You can find out more about how this was done [here](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
@@ -34,21 +32,26 @@ To turn the compiled binary to an Atari executable:
 
 `vlink build/main.o build/MONOMNTL.TOS -bataritos`
 
-## Folders
+## Files
 
-* `COMPILED` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
+* `MAIN.S` - Main source code file. Assemble this to create the demo.
+* `COMPILED` - Compiled versions of the demo.
+  * `ORIGINAL` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
+  * `REMASTER` - Compiled version of the demo from the reverse-engineered source code.
 * `GRAPHICS` 
   * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 images. They're just *used* like bitmaps.
   * `PACKED`- Degas Elite PI3 images packed with Atomix v3.5 packer. Used by the code.
   * `UNPACKED`- the unpacked versions of the above. *Not* used by the code.
   * `SENIOR_L.OGO` - The Senior Dads logo in ASCII text. Designed for use in ST Med or Hi resoloution.
+* `DEMOPARTS` - Inidividual parts of the demo, used by `MAIN.S`.
+* `DISASSEMB/MONOMNTL.S` - Disassembly of the original binary using TT-Digger. This is what we started out with!
 * `DOCS/README.md` - [How we reverse-engineered the demo](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
-* `DISASSMB` - Disassembly of the original binary using TT-Digger. This is what we started out with!
 * `INCLUDES` - Various macro and helpers code.
 * `OLD` - Earlier incomplete version of the demo. Note that the source code has **not** been checked for VASM compatiblity, and is designed to be compiled in Devpac 3 on an Atari system.
-* `SOUND` - `.THK` files are chip tune music.
-  * `CRASH.THK` - exit crash music.
-  * `FANFARE.THK` - introductory fanfare.
-  * `MONOMNTL.THK` - main demo music.
-  * `STATIC.THK` - static noise.
-  * `TESTCARD.THK` - test card music.
+
+* `SOUND` - `.THK` Chip tune music used by the demo.
+  * `CRASH.THK` - Exit crash music.
+  * `FANFARE.THK` - "Senior Dads present..." introductory fanfare.
+  * `MONOMNTL.THK` - Main demo music.
+  * `STATIC.THK` - TV static noise.
+  * `TESTCARD.THK` - "Test Card" screen music.
