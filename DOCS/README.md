@@ -263,9 +263,16 @@ Finally, we were wondering about the 96K worth of unpacked PI3s in the demo. Cou
 ### Branching for the "remix" version
 The good thing about source control is that you can preserve the original code, and do a different version in another branch. So the the first thingn we did was create branches for the "remaster" and the "remix" version we were about to start working on.
 
+### Fixing the colour monitor message
+This was fairly easy to fix. The code to check the monitor resolution was for some reason in the middle of the "init" sub routine, so we moved it to the start of the routine, then in the routine that prints the cheeky message and waits for a keypress, instead of the `clr.w -(a7)` trap #1 to exit the program (!), the code now `bra`s to a new label `end_demo` in the main demo hub, which bypasses the rest of the demo and exits cleanly to the desktop.
+
+Now you may be thinking: *"Hang on, the stack still has the return address for `init` on it, so won't it crash when it returns?"* Well, yes, that would something to be wary of, but the first thing that happens after jumping to `end_demo` is a restoration of the old stack, so it doesn't matter!
+
 ### Fixing the timing
 
-Just so you know, we *never actually developed or tested this demo on a mono monitor*- we used a colour display with a mono emulator for development and testing.
+Just so you know, we *never actually developed or tested this demo on a mono monitor*- we used a colour display with a mono emulator for development and testing! So our original timing was probably pushed a slightly longer than needed timings due to the comapratively slow mono emulator, which also ran on a 50Hz display.
+
+One thing that we did notice was that the shorter values were more accorate, and that it was the longer ones that were more out, and over the course fo the demo that added up to a noticable lag between the music and visuals, adding to just of a bars worth of music at the end of the demo!
 
 # MORE TO COME!
 

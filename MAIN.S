@@ -1,4 +1,7 @@
 * MONO MENTAL by SENIOR DADS
+* 
+* (REMIX version)
+*
 * Original demo release: 11th April 1998 at the ALT party in Turku, Finland.
 * (https://www.altparty.org/2008/the-first-alternative-party.html)
 
@@ -55,6 +58,7 @@ FINAL_VERSION							; < Comment for labels and faster assembly
 	jsr		credits
 	jsr		the_end
 	bsr		ret
+end_demo
 	movea.l	old_stack,a7
 	rts
 
@@ -79,17 +83,17 @@ depack_pic_to_back:
 
 * SAVE SYSTEM STUFF AND SETUP:
 ; This also:
-; a) Does the opening text titles.
-; b) Checks the display resolution is hi-res monochrome
+; a) Checks the display resolution is hi-res monochrome
+; b) Does the opening text titles.
 init:	
+	getrez_st 	d7					; <- Get ST Resolution
+	cmp.b	#2,d7					; <- If it's not 2 (hi-res)...
+	bne		hi_res_you_wally		; <- ...then show a little message!
 	move.l	$45e.w,old_screen_ptr	; Not sure why we saved this, as we don't change it!
 	move.l	vbl.w,oldvbl			; Save the old VBL vector
 	move.l	#myvbl,vbl.w			; ... and slot in a "timer only" VBL
 	bsr		senior_text_intro
 	get_vidaddr	old_vidaddr			; Save the current video address
-	getrez_st 	d7					; <- Get ST Resolution
-	cmp.b	#2,d7					; <- If it's not 2 (hi-res)...
-	bne.s	hi_res_you_wally		; <- ...then show a little message!
 	clr.b	front+3					; Align the 3 screen addresses to 256 byte boundaries
 	clr.b	back+3
 	clr.b	scratch_screen+3
@@ -122,8 +126,7 @@ ret:
 hi_res_you_wally:
 	print_string #.its_hi_res
 	wait_key
-	clr		-(a7)					; <- Er, if we're leaving without restoring the stack or coming out
-	trap	#1						; <- of supervisor mode, won't this crash the machine?
+	bra 	end_demo
 .its_hi_res:
 	dc.b 27, 'E'	; <- Clear screen
 	dc.b 'OI! Idiot!', 13, 10, 10						; <- Did Dame Vera Lynn write this?
