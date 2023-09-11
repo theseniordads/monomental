@@ -245,13 +245,27 @@ Adrenaline Ripper version, which was 10K! But we played it in Megatizer, and it 
 ## Cleaning up
 Now we had a working version of the demo, it was just a matter of cleaning up and annotating the remaining code! We also found there was a lot of crap code left by the dissassembly, which took up a lot of the space in the source. Once we cleared that up, and hived off the various demo parts into their own include files, the source code was a whopping 12.3K with 40.1K of include files, 52.4K in total. When you think that we started off with a 1383K disassembly source code file, that's quite a reduction, escpecially with the amount of commenting we added to the source code!
 
-So now all we had to do was compile the code without labels to an executable, and we'd have a version of the demo that was as close to the original as possible! One thing we noticed was that the compiled version was 261K whilst the original was 267K, so maybe we cleared out some code that was in the original but not used, or somehow the VASM assembly was more optimal than Devpac. (Probaly unlikely, since how can you make assembly language more optimal than it already is?) Either way, the newly compiled version, which we have decided to call the "Remastered" version, runs exactly like the original, and is as close as possible to the original binary. After jumping into Hatari, and running the new version through Atomik packer v3.5, we ended up with a 115K executable (As opposed to the 122K original version), which you can see [here](https://github.com/theseniordads/monomental/tree/main/COMPILED/REMASTER).
+So now all we had to do was compile the code without labels to an executable, and we'd have a version of the demo that was as close to the original as possible! One thing we noticed was that the compiled version was 261K whilst the original was 267K, so maybe we cleared out some code that was in the original but not used, or somehow the VASM assembly was more optimal than Devpac. (Probably unlikely, since how can you make assembly language more optimal than it already is?) Either way, the newly compiled version, which we have decided to call the "Remastered" version, runs exactly like the original, and is as close as possible to the original binary. After jumping into Hatari, and running the new version through Atomik packer v3.5, we ended up with a 115K executable (As opposed to the 122K original version), which you can see [here](https://github.com/theseniordads/monomental/tree/main/COMPILED/REMASTER).
 
 After testing the result on Hatari, we had to clear up one last thing: although we had designed for and specified in our `MONOMNTL.TXT` that this demo was for a 1 meg STFM with mono monitor, given that the demo used up around 354K of memory (which includes 3 screen buffers worth of memory), would it also work on a half-meg? Way back when we coded the original demo, we all had memory expanded STs, and we weren't going to open up our computers (No mean feat, if you've ever tried this with an Atari 16 bit!) and remove memory chips just to test our demos! And none of our Atarian friends had anything less than a meg of memory on their computers, so we just aimed for a 1 meg target, given the amount of graphics we were using, with a half-meg target as a nice-to-have.
 
 Of course, thanks to Hatari, you can do the virtual equivalent of opening up your Atari STFM and removing memory chips, so we configured Hatari as a half-meg STFM on a mono moniter, and ran the demo, and it worked just fine. Intrigued, we ran the original version on the same configuration- also fine!
 
 So "Mono Mental" was *always* half-meg compatible!
+
+## "Remixing" the demo
+Now we had a version of the source that compiled an (almost) exact copy of the original demo. But we weren't going to stop there! One annoying thing we noticed whilst debugging was that the timing of the screens was slowly getting out of sync as the demo progressed. We noticed this when running the original demo, so it wasn't a result of our recompilation. Now, if you've seen our "Air Dirt" and "Xmas Card '97" demos, you'll know how picky we are with timing! So it was really super annoying to see it slowly fall apart in this demo, and we realise that it it was probably *always* like that when you view it on it's intended platform! 
+
+Also, we wanted to fix that message you get when you try and run the demo on a colour monitor! It's bad enough that you get a nasty message, but having having a situation where it appears to exit cleanly to the desktop, and the computer crashes when you start moving the mouse is taking the piss! In fact, is there a reason the message appears *after* the initial text intro has happened?
+
+Finally, we were wondering about the 96K worth of unpacked PI3s in the demo. Could we have worked out a way to pack them and use them in the demo if we had that time?
+
+### Branching for the "remix" version
+The good thing about source control is that you can preserve the original code, and do a different version in another branch. So the the first thingn we did was create branches for the "remaster" and the "remix" version we were about to start working on.
+
+### Fixing the timing
+
+Just so you know, we *never actually developed or tested this demo on a mono monitor*- we used a colour display with a mono emulator for development and testing.
 
 # MORE TO COME!
 
