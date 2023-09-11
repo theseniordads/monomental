@@ -15,7 +15,7 @@ yogie_baird:
 	move	#100,d1
 	jsr		font_string_mono
 	jsr		swap_screens				; Display
-	set_clicks #320-1					; Wait a bit
+	set_clicks #300-1					; Wait a bit
 	wait_until_end_clicks
 	lea		pic_yogie_baird,a0			; Depack the "Yogie Baird" pic onto the Telly Scan source buffer
 	lea		screen3-34,a1
@@ -43,7 +43,7 @@ man_from_uncle:
 	lea		screen3-34,a1
 	jsr		depack
 	move.l	#screen3,telly_scan_source	; Start the Telly Scanner
-	set_clicks #640-1		; <- Set when the Scanner ends
+	set_clicks #630-1		; <- Set when the Scanner ends
 	bsr		telly_scanner
 	rts
 
@@ -74,7 +74,8 @@ telly_scanner:
 	bsr	fadein_mask				; "Fade" in the mask for the next frame
 	wait_vbl
 	jsr	swap_screens			; Display
-	if_not_endclicks .loop		; If the timer hasn't run out, do the next frame
+	tst.w 	click_counter		; Check if the timer has run out
+	bgt.s 	.loop				; if not, do the next frame
 	sf	scan_wrapped			; Reset
 	rts
 

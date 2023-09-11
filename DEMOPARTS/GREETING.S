@@ -3,12 +3,12 @@
 ; seemingly random fashion. In the case, the graphics are a reference to the cover of The Chemical
 ; Brothers (then new) album "Dig Your Own Hole".
 greetings:
-	set_clicks	#640-1							; If you're wondering about the large value, this how long the *whole* screen goes on for!
+	set_clicks	#620-1							; If you're wondering about the large value, this how long the *whole* screen goes on for!
 	lea		pic_greetings,a0					; "Dig Your Own Demo" pic
 	jsr		depack_pic_to_back
 	jsr		swap_screens						; Display
 	movem.l	d6-d7,-(a7)
-	move	#80,d7								; Wait a bit
+	move	#100,d7								; Wait a bit
 	subq.l	#1,d7								; (We're beginning to think we could have done with another click counter at this point!)
 greets_wait_loop1:
 	wait_click

@@ -23,7 +23,7 @@
 
  ****** NOTE: WE'RE STIL WORKING ON THIS! ******
 
-FINAL_VERSION							; < Comment for labels and faster assembly
+;FINAL_VERSION							; < Comment for labels and faster assembly
 
  	IFD	FINAL_VERSION
 	opt	d-

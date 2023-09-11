@@ -23,7 +23,7 @@ codearokie:
 	bra.s	.next_frame					; ... if not, continue with next frame.
 .exit:
 	set_vidaddr back					; Wait, what? Why are we displaying the back screen instead of the front?
-	set_clicks #328-1
+	set_clicks #308-1
 	lea		pic_basil,a0				; ... It's so that when the "Basil" picture depacks...
 	jsr		depack_pic_to_back			; ... We can see it happening on screen!
 	wait_until_end_clicks

@@ -270,9 +270,11 @@ Now you may be thinking: *"Hang on, the stack still has the return address for `
 
 ### Fixing the timing
 
-Just so you know, we *never actually developed or tested this demo on a mono monitor*- we used a colour display with a mono emulator for development and testing! So our original timing was probably pushed a slightly longer than needed timings due to the comapratively slow mono emulator, which also ran on a 50Hz display.
+Just so you know, we **never actually developed or tested this demo on a mono monitor**!!! At the time, we didn't have one, so We used a colour display with a mono emulator for development and testing! And we didn't know anyone with a mono monitor! So our original timing was probably pushed a slightly longer than needed due to the comapratively slow mono emulator, which also ran on a 50Hz display.
 
-One thing that we did notice was that the shorter values were more accorate, and that it was the longer ones that were more out, and over the course fo the demo that added up to a noticable lag between the music and visuals, adding to just of a bars worth of music at the end of the demo!
+One thing that we did notice was that the shorter values were more accorate, and that it was the longer ones that were more out, and over the course fo the demo that added up to a noticable lag between the music and visuals, adding to just over a bars worth of music at the end of the demo!
+
+The first bit where were noticed the timing was going out was the intro text to the "Yogie Baird" screen, where the text was displaying for just a little bit too long! Fixing that actually fixed the timing for the "Yogie" screen, and the following "Codearokie" screen! The next time that had to be fixed was the "Basil" screen going on a little bit too long. Fixing this fixed most of the demo up to and including the "Tri-di Donut"! The next tweak was the timing on the "Greetings" screen, which *almost* fixed the time of the rest of the demo! All that needed was a small tweak to the "Man from UNCLE" screen, and the timing was perfect! Ironically, this was the time to find that there was a bug in the timer code here, as it didn't test for the possibility of a negative time value when it was checking if the timer had expired! Still, it was an easy fix!
 
 # MORE TO COME!
 
