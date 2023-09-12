@@ -58,7 +58,6 @@ One feature we did use on this test run was the ability right click on a line of
 So, although we'd really only just scratched the surface, we now had a less fearsome and more understandable source to work with! Now, before we started to dive deeper into the code, we had to extract the data from the demo, and replace the data in the source with references to the extracted data.
 
 ## Extracting the data
-
 We knew that there were 3 types of data used in the demo:
 
 * Atomik 3.5 packed PI3 images
@@ -66,7 +65,6 @@ We knew that there were 3 types of data used in the demo:
 * Bitmap animation sequences
 
 ### Extracting the PI3 images
-
 We knew that the PI3 images were packed with Atomik 3.5, and we knew the header for Atomik packed files is a 4 byte string 'ATM5'. So, the logical thing would be to search for 'ATM5', and save a binary file composed of memory from there to the end of the packed file, then run a depacker in Hatari to get the unpacked file.
 
 We could find 'ATM5' strings using the memory search in HRDB, but we couldn't any way of saving a binary file from the memory there, so we decided to go old school, and spin up an instance of Hatari, and load the demo into good old MONST2! Our routine for each file would go like this
@@ -101,7 +99,6 @@ Once the labels were changed to readable ones with meaningful names, we replaced
 So, as you can imagine, integrating the picture data into the source code took a while!
 
 ### Extracting the music
-
 Thankfully, this was much easier. We did have some of the music from the incomplete demo, but we weren't sure if it was up-to-date. In any case, there was **one** piece of music we *didn't* have, (The "Test Card" music.) so if we were going to have to extract *that*, we might as well extract the others, and have the most up-to-date versions!
 
 We knew the obvious solution would be to run a music ripper program on the uncompressed demo in Hatari, and we were right! Well, sort of, as Dodgy Music ripper couldn't find a thing! However, we were luckier with the Adrenaline Ripper, which found all 5 (!) of them! One nice touch in their music ripper section is that if it finds music, you can listen to a preview of it, enabling you to identify the song and save it with a meaningful filename!
@@ -113,7 +110,6 @@ One thing that made us laugh was that in another section of the Ripper, we found
 Of course, we had to go through the same rigmarole as with the pictures when it came to slotting them into the source code. Fortunately the music files are only referenced a couple of times in the code each, so it was easier to fix the labels to meaningful ones. Also, the music files are next to each other in the code, which made it much easier to replace the source with `incbin` replacements.
 
 ### Extracting the bitmaps
-
 We were expecting this to be the most difficult bit of the extraction, as we were expecting the animations to be in a binary bitmap form, and we'd have to spend ages analysing the code to work out the dimensions of the animation frames, and then going into MONST2, and binary saving them off. However, that's not exactly what happened!
 
 We were mulling over how to do the extraction whilst we were still in the Adrenaline Ripper. We had a look at the screen ripper section, and noticed we could view the animation frames from the demo as uncompressed bitmaps in memory. Of course, it's showing a hi-res bitmap on 4 bitplane screen, but we found we could switch to a 2-plane display. Of course, the Ripper doesn't do hi-res, but what we did notice was that when we viewed the screen memory from the start of the animation frames, that the series of bitmaps filled the whole of the screen, implying it was a block of exactly 32000 bytes!
@@ -151,15 +147,13 @@ We tried to modify our `.vscode/tasks.json` to copy the compiled binary to the A
 What we decided then was to comment out all the calls to the demo parts, and just uncomment them one at a time as we went through the debugging process. We were also thinking about splitting the source into a series of demopart includes. We were aiming for a build that is faithful (almost!) to the original binary, but given the original source almost certainly no longer exists, and that we were aiming for VASM.Vlink compatibility, aiming for *source code* fidelity would be a bit silly!
 
 ### Save and restore routines
-
 First thing we wanted to check, before any of the demo parts, was the save and restore routines. Can the program show the text intro, check for a mono monitor, and then exit cleanly?
 
-Well, we gave a go, and straight away, we noticed something wrong, and it was from the most unexpected place- the text intro! In the last line, in the word "space", "e" is replaced with "£". However the ASCII character code for "£" on the Atari is different from the UTF-8 the source code is saved as, so it compiled as UTF-8 "£", mucking up the last line of the text intro! We fixed that by replacing the "£" with the Atari ASCII character code for "£". We also check for the monitor type, and that was the Save routines ready to go!
+Well, we gave a go, and straight away, we noticed something wrong, and it was from the most unexpected place- the text intro! In the last line, in the word "space", "e" is replaced with "£". However the ASCII character code for "£" [on the Atari is different](https://en.wikipedia.org/wiki/Atari_ST_character_set) from the UTF-8 the source code is saved as, so it compiled as UTF-8 "£", mucking up the last line of the text intro! We fixed that by replacing the "£" with the Atari ASCII character code for "£". We also check for the monitor type, and that was the Save routines ready to go!
 
 On the restore routines, the only problem we found that the code didn't take to kindly to stopping a piece of music it hadn't even started playing yet! However, ever we commented that line out, restore routines worked fine.
 
 ### "Present..." screen
-
 An important milestone, as it's the first time the demo starts playing music and depacking a picture and displaying it! So we were a bit concerned when it did neither upon first run! The problem seemed to be occuring when the music was first being initialised and the processor jumped into the initialisation routines of the music file, and swiftly disappeared down a rabbit hole! We looked at the music file in the memory panel of HRDB, and thought *"Hmmm, that doesn't look like the 3 BRAs we were expecting at the start of the music file!"* Was the file corrupted? When we resetted and looked again at the music file in the memory panel again, it appeared to be fine *before* we ran the program, so something must have corrupted it in the meantime!
 
 Sure enough, we tracked it down to the screen depack routine that was run before the music was initialised. It appeared to be depacking the screen all over the music files! But why was it doing this, when it never did this before? We looked the depack code include, (The standard Atomik depack routine included with the packer.) and realised it was in it's default mode of depacking data to the same place as the packed data! As the "Presents..." pic was close to the music files in the program data, that means it was corrupting those files before they had a chance to run!
@@ -167,7 +161,6 @@ Sure enough, we tracked it down to the screen depack routine that was run before
 As soon as we changed the mode in the source file, and re-built, the "Present..." screen worked first time! Phew!!!
 
 ### The "Test Card" screen
-
 No crashes here, but we noticed a couple of things wrong straight away. First was that the font used by our `font_string_mono` routine appeared corrupted! The second was that static music didn't appear to be playing! We actually noticed this when we were coding the original version- sometimes the static section was silent- so we weren't too worried about this one. We were more worried about the font corruption, as that was used all over the demo!
 
 We were a bit surprised at this, as we we're using the same `CRAPFONT.DAT` font we'd been using since "[Air Dirt](https://github.com/theseniordads/airdirtdemo)", and the font data on the recompiled demo appeared to be identical to the original demo when we looked it in the Memory Pane in HRDB, so we suspected the problem might be in our recreated code! We looked at the code, and it looked like there was nothing wrong with it, and it appeared identical to the disassembled code we saw when looked at the original demo in HRDB, so what was going on?
@@ -261,11 +254,53 @@ Also, we wanted to fix that message you get when you try and run the demo on a c
 Finally, we were wondering about the 96K worth of unpacked PI3s in the demo. Could we have worked out a way to pack them and use them in the demo if we had that time?
 
 ### Branching for the "remix" version
-The good thing about source control is that you can preserve the original code, and do a different version in another branch. So the the first thingn we did was create branches for the "remaster" and the "remix" version we were about to start working on.
+The good thing about source control is that you can preserve the original code, and do a different version in another branch. So the the first thing we did was create branches for the "remaster" and the "remix" version we were about to start working on.
+
+### Fixing the colour monitor message
+This was fairly easy to fix. The code to check the monitor resolution was for some reason in the middle of the "init" sub routine, so we moved it to the start of the routine, then in the routine that prints the cheeky message and waits for a keypress, instead of the `clr.w -(a7)` trap #1 to exit the program (!), the code now `bra`s to a new label `end_demo` in the main demo hub, which bypasses the rest of the demo and exits cleanly to the desktop.
+
+Now you may be thinking: *"Hang on, the stack still has the return address for `init` on it, so won't it crash when it returns?"* Well, yes, that would something to be wary of, but the first thing that happens after jumping to `end_demo` is a restoration of the old stack, so it doesn't matter!
 
 ### Fixing the timing
+Just so you know, we **never actually developed or tested this demo on a mono monitor**!!! At the time, we didn't have one, so We used a colour display with a mono emulator for development and testing! And we didn't know anyone with a mono monitor! So our original timing was probably pushed a slightly longer than needed due to the comparatively slow mono emulator, which also ran on a 50Hz display.
 
-Just so you know, we *never actually developed or tested this demo on a mono monitor*- we used a colour display with a mono emulator for development and testing.
+One thing that we did notice was that the shorter values were more accurate, and that it was the longer ones that were more out, and over the course of the demo that added up to a noticable lag between the music and visuals, adding to just over a bars worth of music at the end of the demo!
 
-# MORE TO COME!
+The first bit where were noticed the timing was going out was the intro text to the "Yogie Baird" screen, where the text was displaying for just a little bit too long! Fixing that actually fixed the timing for the "Yogie" screen, and the following "Codearokie" screen! The next time that had to be fixed was the "Basil" screen going on a little bit too long. Fixing this fixed most of the demo up to and including the "Tri-di Donut"! The next tweak was the timing on the "Greetings" screen, which *almost* fixed the time of the rest of the demo! All that needed was a small tweak to the "Man from UNCLE" screen, and the timing was perfect! Ironically, this was the time to find that there was a bug in the timer code here, as it didn't test for the possibility of a negative time value when it was checking if the timer had expired! Still, it was an easy fix!
 
+### Packing the unpacked PI3s
+
+We knew this would be a bit more tricky than the other enhancements, and we were right! We knew we'd need a fourth screen buffer, and then we realised that as the two screens the bitmaps are used in already use screen buffer 3, that for the "Credits" screen, we'd need a *fifth* screen buffer to store the additional crew bitmaps! Would this be possible on a half-meg STFM? We worked out that, given the unpacked PI3s took up ~96k of memory, as long as the packed versions took up 32K or less, that meant that enough memory would bee freed up for two additional screen buffers. As it happened, when we packed the PI3s, they took up 8K in total! So we could add the extra screen buffers, and still save 24K of memory!
+
+The question then became: do we have the time to unpack the PI3s on the fly? If you see the "Basil" screen, the picture is depacked to the screen currently being displayed for a joke, so you can see how long the depacking takes! In order to do the depacking for the bitmaps, we'd have to do the depacking whilst the demo is running, but not doing anything, such as when it's waiting for the timer to run out- and we'd have to be pretty strategic about it!
+
+The "Doctor Who" screen comes right after the "Steptool and Son" screen, and there wasn't any time during that screen to do any unpacking, but before *that* is the "Basil" screen, which has a long enough pause to do the unpacking. So we added additional code that depacks the "Tardis" bitmap to screen buffer 4 in the background, and reset the sprite pointers to point to screen buffer 4, and it worked first time! The irony that the "Basil" screen now shows a picture being depacked to screen and then secretly depacks *another* picture to memory is not lost on us!
+
+The "Credits" screen would be a bit more difficult, and we'd have to find time to depack *two* PI3s, and the only obvious pause is during the "Greetings" screen, when the bombs show up! Would that be enough time to depack two pics? Turns out it was more than enough time, and so we added the depacking code to the "Greetings" screen, and pointed the sprite pointers to screen buffers 4 and 5, and that also worked first time!
+
+### Final touches 
+As a result of the bitmaps now being packed, the *unpacked* executable shrunk from 261K to 173K! And despite the usage of two new screen buffers, it took up 28K less in memory! We then found you could define multiple areas in the source code as `text`, `data` or `bss`, sections, and VASM would accept it! (We expect that this was always the case with the likes of Devpac or similar Atari assemblers.) That meant we could define a lot of the internal buffers used as `bss`, and further shrink the executable to 167K!
+
+There was one funny error along the way though: we accidently removed the `rts` from the end of the "Tridi Donut", so it went straight into the next bit of code, and so that screen ended, and then suddenly the music stopped and "Seniors Dads present..." appeared, complete with fanfare! And after that, the demo continues as if nothing happened, albiet to the dying strains for the fanfare!
+
+One thing that we did notice was that all that packing and optimisation meant that the ending "Crash" screen, which copied from an area of the demo code, which happened to include the uncompressed bitmaps, and the words "The end?" in a memory buffer, now was just a load of random memory dumped to the screen! 
+
+Then we had an evil thought: *if we've saved 28K of memory, do we have enough memory for a compressed screendump of the original ending, and display that instead?* We worked out that if you ran the original demo in MONST2 until the bit after the end where interrupts were restored, the area of memory that was copied onto screen during the "crash" section was unaltered, and we could binary save 32000 bytes from that address into a binary file. We imported the uncompressed file into our new code, and it worked! Of course, being who we are, we added fake Degas Elite headers either side of the bitmap in the code, so we could run the new code through MONST2, and save off the bitmap as a Degas Elite PI3 file! 
+
+Putting the PI3 through Atomik resulted in the most disappointing of the packing results, with the packed version being a whopping 15K, (!) however, being able to re-use the picture depacker code actually resulted in a reduction in the code size! The size of the compiled exectuable was now 181K, which is still 86K less than the uncompressed original *and* it's memory footprint is nearly 17K less! 
+
+The final question: now that all the uncompressed bitmaps are compressed, and all the `bss` sections added,
+how well would the executable compress with Atomik? Would there be anything left to compress? We knew that there were some `REPT` code blocks which whick could be easily compressed, but there was also an extra 15K of not-easily-compressible data to pack! However, after running the executable through Atomik, we found that it was still able to pack the executable down to a respectable 125K, compared to the 122K of the original and the 112K of the "Remastered" version. It might seem disappointing that the "remix" version is 3K bigger packed than the original, but the unpacked "remix" executable is **68%** of the size of the unpacked original (The acutal code is just under 32K!) and uses less memory, and still fits in more data! When you consider there's **688K** of graphics data plus 3 main pieces of music, and it *still* works on a half meg ST, that's a pretty decent acheivement! Well, that's how we justify it anyway...
+
+## Conclusion
+
+And that is finally that: we've finally got a source code version of "Mono Mental"! And we've even got a tweaked version of it that is as close to what we intended the original demo to be like! From this epic journey, we learned the following lessons:
+1. If you're using modern tools to develop for the Atari, use VASM, but make sure you have a way of automating the assembly and build process. Once we tweaked it a bit, AmigaAssembly was a godsend for us- everytime we saved, it would do a test assembly of the code, giving us and instant syntax check, and building an exectuable was as simple as pressing `CTRL+SHIFT+B`!
+2. If you're wanting to debug your code, a external debugger is extemely useful. In this case, HRDB was a vital tool in our debugging arsenal, and we couldn't have done it without it!
+3. However, HRDB *couldn't* do everything, so don't be surprised if you have get down and dirty, and use good old MONST2 on the Atari platform itself. After getting reaquainted with it, we were impressed by how good a debugger it was for it's time!
+4. Ripper programs can be useful for extracting data from a binary, but don't be surprised if you have to do some manual work to get the data you want!
+5. Even with good disassemblers like TT Digger, there will be a lot of crap code left over from the disassembly process, so be prepared to do a lot of cleaning up! This will probably be the most time consuming part of the process.
+5. As well as modern tools, you'll be using a lot of old tools on the Atari platform, so take advantage of the fact that can spin up multiple instances of Hatari in different modes for different tools, thus enabling you do to some multitasking!
+
+**SENIOR DADS RULEC!!!**
+*2023-09-12*

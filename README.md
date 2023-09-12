@@ -4,6 +4,8 @@ Full assembler source for the "Mono-mental" demo by The Senior Dads, which was r
 
 This release is different to other demo source code releases from us in that it's not the original source, (which is lost), but a reverse-engineer of the source code from the original binary. The original binary was disassembled and the source code was re-created from the disassembly. The original graphics and sound were also re-created from the binary. You can find out more about how this was done [here](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
 
+There are two versions of the source code in this release. The first is a straight reverse-engineer of the original binary, and resides in the `[remaster](https://github.com/theseniordads/monomental/tree/remaster)` branch. The second is a tweaked version of the reverse-engineered source code, and resides in the `[remix](https://github.com/theseniordads/monomental/tree/remix)` branch.
+
 ## Specifications
 
 * An Atari ST or later with at least 1 megabytes of memory, TOS 1.04 minumum, a hard drive, and **hi-res mono monitor**.
@@ -38,6 +40,7 @@ To turn the compiled binary to an Atari executable:
 * `COMPILED` - Compiled versions of the demo.
   * `ORIGINAL` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
   * `REMASTER` - Compiled version of the demo from the reverse-engineered source code.
+  * `REMIX` - Compiled version of the demo from a tweaked version of reverse-engineered source code.
 * `GRAPHICS` 
   * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 images. They're just *used* like bitmaps.
   * `PACKED`- Degas Elite PI3 images packed with Atomix v3.5 packer. Used by the code.

@@ -18,8 +18,6 @@
  * Exectuable format: Atari TOS .PRG
  * Minimum hardware: Atari STFM with 1MB RAM, **MONOCHROME** monitor only.
 
- ****** NOTE: WE'RE STIL WORKING ON THIS! ******
-
 FINAL_VERSION							; < Comment for labels and faster assembly
 
  	IFD	FINAL_VERSION
