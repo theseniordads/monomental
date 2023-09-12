@@ -4,7 +4,7 @@ Full assembler source for the "Mono-mental" demo by The Senior Dads, which was r
 
 This release is different to other demo source code releases from us in that it's not the original source, (which is lost), but a reverse-engineer of the source code from the original binary. The original binary was disassembled and the source code was re-created from the disassembly. The original graphics and sound were also re-created from the binary. You can find out more about how this was done [here](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
 
-There are two versions of the source code in this release. The first is a straight reverse-engineer of the original binary, and resides in the `[remaster](https://github.com/theseniordads/monomental/tree/remaster)` branch. The second is a tweaked version of the reverse-engineered source code, and resides in the `[remix](https://github.com/theseniordads/monomental/tree/remix)` branch.
+There are two versions of the source code in this release. The first is a straight reverse-engineer of the original binary, and resides in the [`remaster`](https://github.com/theseniordads/monomental/tree/remaster) branch. The second is a tweaked version of the reverse-engineered source code, and resides in the [`remix`](https://github.com/theseniordads/monomental/tree/remix) branch.
 
 ## Specifications
 
