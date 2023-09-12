@@ -1,7 +1,9 @@
+	text
 
 * "CODEAROKIE" SCREEN:
 ; This displays a list of multipart Codearokie "frames", and then advertises
-; Jackson Pollocks cool new (then) indie band Basil!
+; Jackson Pollocks cool new (then) indie band Basil! (And sneakily depacks the
+; "Tardis" bitmap to a screen buffer in readiness for the "Doctor Who" screen!)
 codearokie:
 	movea.l	back,a0						; Blank back screen
 	jsr		black_screen
@@ -26,11 +28,11 @@ codearokie:
 	set_clicks #308-1
 	lea		pic_basil,a0				; ... It's so that when the "Basil" picture depacks...
 	jsr		depack_pic_to_back			; ... We can see it happening on screen!
+	lea		bmp_tardis,a0				; We have enough time to unpack the "Tardis" bitmap
+	lea		screen4,a1					; ... to a screen buffer in readiness for the 
+	jsr		depack						; ... "Doctor Who" screen.
 	wait_until_end_clicks
 	rts
-
-codearokie_abort: ds.b	1	; <- Dunno why this is here on it's own, and not somewhere more sensible!
-	even
 
 * CODEAROKIE FRAME:
 ; This subroutine take the address from a pointer table to data consisting of timing, positioning,
@@ -74,7 +76,9 @@ c_finished_codearokie:
 	wait_until_end_clicks				; If we're finished the *last* frame, just wait for the 
 	st	codearokie_abort				; ... required amount AND abort.
 	rts
-		
+	
+	data 
+
 pic_codearokie:
 	incbin graphics/packed/codearok.pi3
 	even
@@ -219,4 +223,8 @@ frame7_text2 dc.b '<<FRAME>>', 0
 
 frame8_text1 dc.b 'RTS', 0
 frame8_text2 dc.b '!!!!!', 0
+	even
+
+	bss
+codearokie_abort: ds.b	1
 	even

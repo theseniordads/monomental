@@ -1,3 +1,5 @@
+	text
+
 * THE ENDING AKA "WHITE DOT" SCREEN:
 ; For younger readers, this is a tribute to the "white dot" that briefly appeared when you
 ; switched off an old analogue CRT-based TV! Upon switching off, the picture would rapidly
@@ -43,12 +45,8 @@ end_anim_loop:
 	jsr		font_string_mono
 	wait_vbl
 	jsr		swap_screens						; Display "YES"
-	movea.l	back,a1
-	lea		4.w,a2								; ?? We don't use this! We suspect we were originally going to copy memory from here to the back screen!
-	move	#(32000/4)-1,d0						; Instead we're actually copying from the address of txt_end_yes to the back screen!
-.copy:
-	move.l	(a0)+,(a1)+
-	dbf	d0,.copy
+	lea		pic_crash,a0						; Unpack the crash piccy!
+	jsr		depack_pic_to_back
 	wait_until_end_clicks
 	wait_vbl
 	jsr		swap_screens						; Display
@@ -72,12 +70,15 @@ end_anim_loop:
 	jsr		mus_monomental_main+4				; Stop music.
 	rts
 
+	data
+
 txt_end_dot:
 	dc.b	'.', 0
 txt_end_the_end:
 	dc.b	'The end?', 0
-	even
-txt_end_yes:				; This needs to be on an even byte boundry as we're copying by longwords from here later!
+txt_end_yes:
 	dc.b	'YES', 0
 	even
 
+pic_crash:
+	incbin graphics/packed/crash.pi3

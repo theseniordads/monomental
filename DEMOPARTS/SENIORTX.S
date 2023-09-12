@@ -1,3 +1,5 @@
+	text
+
 * SENIOR TEXT INTRO:
 ; Displayed at the very beginning of the demo.
 ;
@@ -13,6 +15,8 @@ senior_text_intro:
 	bne.s 	.wait
 .exit:
 	rts
+
+	data
 
 .senior_intro_text:
 	dc.b 27, 'E'                            ; Clear screen

@@ -1,3 +1,5 @@
+	text
+
 * "TRI-DI DONUT" SCREEN:
 ; Would it surprise you to learn that this screen isn't really 3D, but flipping between two pre-made
 ; Degas PI3 pictures? 
@@ -83,8 +85,17 @@ td_wait_loop2:
 	tst		click_counter
 	bgt.s	td_anim2_loop
 	rts
-
+	
+	data
 txt_tridi_donut:
 	dc.b 	'Time for tea', 13
 	dc.b   	' and DONUTS!!!!', 0
 	even
+* Tri-di donut animation pics
+pic_donut1:
+	incbin graphics/packed/donut1.pi3
+	even
+pic_donut2:
+	incbin graphics/packed/donut2.pi3
+	even
+

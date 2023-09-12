@@ -261,7 +261,7 @@ Also, we wanted to fix that message you get when you try and run the demo on a c
 Finally, we were wondering about the 96K worth of unpacked PI3s in the demo. Could we have worked out a way to pack them and use them in the demo if we had that time?
 
 ### Branching for the "remix" version
-The good thing about source control is that you can preserve the original code, and do a different version in another branch. So the the first thingn we did was create branches for the "remaster" and the "remix" version we were about to start working on.
+The good thing about source control is that you can preserve the original code, and do a different version in another branch. So the the first thing we did was create branches for the "remaster" and the "remix" version we were about to start working on.
 
 ### Fixing the colour monitor message
 This was fairly easy to fix. The code to check the monitor resolution was for some reason in the middle of the "init" sub routine, so we moved it to the start of the routine, then in the routine that prints the cheeky message and waits for a keypress, instead of the `clr.w -(a7)` trap #1 to exit the program (!), the code now `bra`s to a new label `end_demo` in the main demo hub, which bypasses the rest of the demo and exits cleanly to the desktop.
@@ -270,11 +270,36 @@ Now you may be thinking: *"Hang on, the stack still has the return address for `
 
 ### Fixing the timing
 
-Just so you know, we **never actually developed or tested this demo on a mono monitor**!!! At the time, we didn't have one, so We used a colour display with a mono emulator for development and testing! And we didn't know anyone with a mono monitor! So our original timing was probably pushed a slightly longer than needed due to the comapratively slow mono emulator, which also ran on a 50Hz display.
+Just so you know, we **never actually developed or tested this demo on a mono monitor**!!! At the time, we didn't have one, so We used a colour display with a mono emulator for development and testing! And we didn't know anyone with a mono monitor! So our original timing was probably pushed a slightly longer than needed due to the comparatively slow mono emulator, which also ran on a 50Hz display.
 
-One thing that we did notice was that the shorter values were more accorate, and that it was the longer ones that were more out, and over the course fo the demo that added up to a noticable lag between the music and visuals, adding to just over a bars worth of music at the end of the demo!
+One thing that we did notice was that the shorter values were more accurate, and that it was the longer ones that were more out, and over the course of the demo that added up to a noticable lag between the music and visuals, adding to just over a bars worth of music at the end of the demo!
 
 The first bit where were noticed the timing was going out was the intro text to the "Yogie Baird" screen, where the text was displaying for just a little bit too long! Fixing that actually fixed the timing for the "Yogie" screen, and the following "Codearokie" screen! The next time that had to be fixed was the "Basil" screen going on a little bit too long. Fixing this fixed most of the demo up to and including the "Tri-di Donut"! The next tweak was the timing on the "Greetings" screen, which *almost* fixed the time of the rest of the demo! All that needed was a small tweak to the "Man from UNCLE" screen, and the timing was perfect! Ironically, this was the time to find that there was a bug in the timer code here, as it didn't test for the possibility of a negative time value when it was checking if the timer had expired! Still, it was an easy fix!
 
-# MORE TO COME!
+### Packing the unpacked PI3s
+
+We knew this would be a bit more tricky than the other enhancements, and we were right! We knew we'd need a fourth screen buffer, and then we realised that as the two screens the bitmaps are used in already use screen buffer 3, that for the "Credits" screen, we'd need a *fifth* screen buffer to store the additional crew bitmaps! Would this be possible on a half-meg STFM? We worked out that, given the unpacked PI3s took up ~96k of memory, as long as the packed versions took up 32K or less, that meant that enough memory would bee freed up for two additional screen buffers. As it happened, when we packed the PI3s, they took up 8K in total! So we could add the extra screen buffers, and still save 24K of memory!
+
+The question then became: do we have the time to unpack the PI3s on the fly? If you see the "Basil" screen, the picture is depacked to the screen currently being displayed for a joke, so you can see how long the depacking takes! In order to do the depacking for the bitmaps, we'd have to do the depacking whilst the demo is running, but not doing anything, such as when it's waiting for the timer to run out- and we'd have to be pretty strategic about it!
+
+The "Doctor Who" screen comes right after the "Steptool and Son" screen, and there wasn't any time during that screen to do any unpacking, but before *that* is the "Basil" screen, which has a long enough pause to do the unpacking. So we added additional code that depacks the "Tardis" bitmap to screen buffer 4 in the background, and reset the sprite pointers to point to screen buffer 4, and it worked first time! The irony that the "Basil" screen now shows a picture being depacked to screen and then secretly depacks *another* picture to memory is not lost on us!
+
+The "Credits" screen would be a bit more difficult, and we'd have to find time to depack *two* PI3s, and the only obvious pause is during the "Greetings" screen, when the bombs show up! Would that be enough time to depack two pics? Turns out it was more than enough time, and so we added the depacking code to the "Greetings" screen, and pointed the sprite pointers to screen buffers 4 and 5, and that also worked first time!
+
+### Final touches 
+
+As a result of the bitmaps now being packed, the *unpacked* executable shrunk from 261K to 173K! And despite the usage of two new screen buffers, it took up 28K less in memory! We then found you could define multiple areas in the source code as `text`, `data` or `bss`, sections, and VASM would accept it! (We expect that this was always the case with the likes of Devpac or similar Atari assemblers.) That meant we could define a lot of the internal buffers used as `bss`, and further shrink the executable to 167K!
+
+There was one funny error along the way though: we accidently removed the `rts` from the end of the "Tridi Donut", so it went straight into the next bit of code, and so that screen ended, and then suddenly the music stopped and "Seniors Dads present..." appeared, complete with fanfare! And after that, the demo continues as if nothing happened, albiet to the dying strains for the fanfare!
+
+One thing that we did notice was that all that packing and optimisation meant that the ending "Crash" screen, which copied from an area of the demo code, which happened to include the uncompressed bitmaps, and the words "The end?" in a memory buffer, now was just a load of random memory dumped to the screen! 
+
+Then we had an evil thought: *if we've saved 28K of memory, do we have enough memory for a compressed screendump of the original ending, and display that instead?* We worked out that if you ran the original demo in MONST2 until the bit after the end where interrupts were restored, the area of memory that was copied onto screen during the "crash" section was unaltered, and we could binary save 32000 bytes from that address into a binary file. We imported the uncompressed file into our new code, and it worked! Of course, being who we are, we added fake Degas Elite headers either side of the bitmap in the code, so we could run the new code through MONST2, and save off the bitmap as a Degas Elite PI3 file! 
+
+Putting the PI3 through the Atomik resulted in the most disappointing of the packing results, with the packed version being a whopping 15K, (!) however, being able to re-use the picture depacker code actually resulted in a reduction in the code size! The size of the compiled exectuable was now 181K, which is still 86K less than the uncompressed original *and* it's memory footprint is nearly 17K less! 
+
+The final question: now that all the uncompressed bitmaps are compressed, and all the `bss` sections added,
+how well would the executable compress with Atomik? Would there be anything left to compress? We knew that there were some `REPT` code blocks which whick could be easily compressed, but there was also an extra 15K of not-easily-compressible data to pack! However, after running the executable through Atomik, we found that it was still able to pack the executable down to a respectable 125K, compared to the 122K of the original and the 112K of the "Remastered" version. It might seem disappointing that the "remix" version is 3K bigger packed than the original, but the unpacked "remix" executable is **68%** of the size of the unpacked original and uses less memory, and still fits in more data! Well, that's we justify it anyway...
+
+## Conclusion
 

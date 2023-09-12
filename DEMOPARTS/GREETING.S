@@ -1,3 +1,5 @@
+	text
+
 * "GREETINGS" SCREEN:
 ; This follows the template set by "Xmas Card '97", and plonks on the crews we're greeting in a 
 ; seemingly random fashion. In the case, the graphics are a reference to the cover of The Chemical
@@ -35,19 +37,19 @@ greets_wait_loop2:								; (Yep, we should have definately done with another cl
 greets_end:
 	moveq	#5,d0								; ZERO DIVIDE ERROR!
 	jsr		do_bombs_mono
+	lea		bmp_crew1,a0				; We have enough time to unpack the "crew" bitmaps
+	lea		screen4,a1					; ... to two screen buffers in readiness for the 
+	jsr		depack						; ... "credits" screen.
+	lea		bmp_crew2,a0
+	lea		screen5,a1
+	jsr		depack
 	wait_until_end_clicks
 	rts
 
+	data
+
 pic_greetings:
 	incbin graphics/packed/hole.pi3				; "Dig Your Own Demo"
-	even
-
-* Tri-di donut animation pics
-pic_donut1:
-	incbin graphics/packed/donut1.pi3			; Err, why are they here in the code, and not next to the tri-di code?!?!?
-	even
-pic_donut2:
-	incbin graphics/packed/donut2.pi3
 	even
 
 * GREETINGS TABLE:

@@ -1,3 +1,4 @@
+	text
 
 * "DOCTOR WHO" SCREEN:
 ; Amazing to see "Doctor Who" crop up in this demo as "old telly"! But at the time of the demo's
@@ -174,9 +175,13 @@ i set i+2
 	endr
 	rts
 
+	bss
+
 ; Here's where the title buffer is stored
 bottom_screen_title_buffer:
 	ds.l	80*16
+
+	data
 
 ; Text for the knock-knock joke. Try not to injure yourself laughing!
 txt_knock_knock:
@@ -189,6 +194,8 @@ txt_doctor_who:
 	dc.b 'Doctor WHO?!?!',0
 txt_doh:
 	dc.b 'Doh!!!!!',0
+
+	text
 
 * SET UP "DOCTOR WHO" STARFIELD:
 ; This doesn't do too much- it basically unpacks a (1k!) "starfield" PI3 to a screen buffer and 
@@ -250,8 +257,12 @@ animate_tardis:
 	jsr	plot_bitmap_anim_frame
 	rts
 
+	bss
+
 starfield_scroll_offset:					; 0-80
-	dc.w	0
+	ds.w	1
+
+	data
 
 * Starfield PI3 source (packed)
 pic_doctor_who_starfield:
@@ -290,20 +301,21 @@ txt_credit_bye:
 	even
 
 bmp_tardis:
-	incbin	graphics/bitmaps/tardis.pi3				; TARDIS source PI3 (packed)
-bmp_tardis1 equ bmp_tardis+34						; Pointers to TARDIS bitmaps
+	incbin	graphics/packed/tardis.pi3				; TARDIS source PI3 (packed)
+	even
+bmp_tardis1 equ screen4+34							; Pointers to TARDIS bitmaps (Note that the picture is depacked to screen buffer 4)
 bmp_tardis2 equ bmp_tardis1+24
 bmp_tardis3 equ bmp_tardis2+24
-	even
 
 bmp_crew1:
-	incbin graphics/bitmaps/crew1.pi3				; Crew source PI3s (packed)
+	incbin graphics/packed/crew1.pi3				; Crew source PI3s (packed)
+	even
 bmp_crew2:
-	incbin graphics/bitmaps/crew2.pi3
-bmp_credit_old_fart			equ bmp_crew1+34					; Pointers to Crew bitmaps
+	incbin graphics/packed/crew2.pi3
+	even
+bmp_credit_old_fart			equ screen4+34						; Pointers to Crew bitmaps (Note that the pictures are depack to screen buffers 4 & 5)
 bmp_credit_doddering_git 	equ bmp_credit_old_fart+24
 bmp_credit_jackson_pollock 	equ bmp_credit_doddering_git+24
-bmp_credit_dame_vera_lynn	equ bmp_crew2+34
+bmp_credit_dame_vera_lynn	equ screen5+34
 bmp_credit_colostomy_bag	equ bmp_credit_dame_vera_lynn+24
 bmp_credit_sd_logo			equ bmp_credit_colostomy_bag+24
-	even

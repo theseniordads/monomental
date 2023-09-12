@@ -853,11 +853,15 @@ end_prog
 	trap	#1
 	ENDC
 
+	bss
+
 	ds.l	200
 new_stack
 	ds.l	1
 old_stack
 	ds.l	1
+
+	text
 
 main
 	endm

@@ -1,3 +1,5 @@
+	text
+
 * "MONO-MENTAL" TITLES:
 ; Display a 4 frame "TV ident" style titles for the demo. Whilst each frame is displayed,
 ; the next frame is depacked to the back screen.
@@ -55,6 +57,8 @@ intro_pics:
 	wait_until_end_clicks
 	rts
 
+	data
+
 pic_mono_titles1:
 	incbin graphics/packed/mono1.pi3
 	even
@@ -75,5 +79,7 @@ pic_first_mono_demo:
 	incbin graphics/packed/firstmon.pi3
 	even
 
+	bss
+
 do_not_restart_music:
-	dc.w	0
+	ds.w	1

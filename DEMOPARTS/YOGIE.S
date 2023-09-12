@@ -1,3 +1,4 @@
+	text
 
 * "YOGIE BAIRD":
 ; This takes a picture on a 3rd screen buffer, and uses a left -> right scrolling mask to put it
@@ -152,24 +153,31 @@ fadein_mask:
 	ori.w	#1,(5*2)(a0)			; Add new pixel at the end
 	rts
 
+	data
+
 scan_mask_source
 	REPT	6
 	dc.w	%1111111111110101       ; <- Note we've added in a couple of lines to the mask for extra authenticity!
 	ENDR
+
+	bss
 scan_mask	ds.l	3
 
-fadein_data	dcb.l	3,0
+fadein_data	ds.l	3
 
-scan_pos	dc.w	0
+scan_pos	ds.w	1
 
+	data
 pic_yogie_baird:
 	incbin graphics/packed/yogie.pi3
 	even
 
-telly_scan_source: dc.l	0
+	bss
+telly_scan_source: 	ds.l	1
 
-scan_wrapped:	dc.w	0
+scan_wrapped:		ds.w	1
 
+	data
 txt_yogie_baird:
 	dc.b '1927!!', 13
 	dc.b '  The world ', 13

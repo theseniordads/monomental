@@ -21,9 +21,9 @@
  * Exectuable format: Atari TOS .PRG
  * Minimum hardware: Atari STFM with 1MB RAM, **MONOCHROME** monitor only.
 
- ****** NOTE: WE'RE STIL WORKING ON THIS! ******
+ ****** NOTE: WE'RE STILL WORKING ON THIS! ******
 
-;FINAL_VERSION							; < Comment for labels and faster assembly
+FINAL_VERSION							; < Comment for labels and faster assembly
 
  	IFD	FINAL_VERSION
 	opt	d-
@@ -32,7 +32,7 @@
 	include includes/genmacro.s			; Useful general macros
 	include includes/musmac.s			; Music and timing macros.
 
-	section text	; <- Bit wierd how VLink doesn't mind this, but chucks a wobbly at 'section data' instead of 'data'!
+	text
 
 	init_prog	normal_exit	; This macro executes the following code as a subroutine in supervisor mode, and sets up a custom stack at 'new_stack'.
 
@@ -120,13 +120,12 @@ ret:
 * MESSAGE IF DEMO IS NOT RUN ON A MONOCHROME MONITOR:
 ; This is the message that appears if you try to run the demo on an Atari video mode other than
 ; ST mode 2 (hi-res monochrome). It basically just clears the screen and prints a message, the 
-; user presses a key, and the demo exits. However, we're a bit concerned about *how* it exits,
-; as it uses a simple #0 trap #1 exit without restoring the stack or coming out of supervisor
-; mode!
+; user presses a key, and the demo exits. 
 hi_res_you_wally:
 	print_string #.its_hi_res
 	wait_key
-	bra 	end_demo
+	bra 	end_demo	; <- Normally, we'd have to correct the stack here, as it has the return address of the "init" routine, but as next statement restores the old stack, we don't need to here.
+	data
 .its_hi_res:
 	dc.b 27, 'E'	; <- Clear screen
 	dc.b 'OI! Idiot!', 13, 10, 10						; <- Did Dame Vera Lynn write this?
@@ -135,6 +134,8 @@ hi_res_you_wally:
 	dc.b 'stupid cretin!!! Why don''t you', 13, 10
 	dc.b 'upgrade your equipment and your', 13, 10
 	dc.b 'braincells, you total thicko!!!', 0
+	even
+	text
 
 	include demoparts/the_end.s			; "The End" aka "White dot" screen.
 	include demoparts/seniortx.s		; Text intro.
@@ -143,6 +144,8 @@ hi_res_you_wally:
 	include demoparts/donut.s			; "Tri-di Donut" screen.
 	include demoparts/present.s			; "Senior Dads present..." screen.
 	include demoparts/title.s			; "Titles" and "Intro pics" screens.
+
+	text
 
 * COPY FRONT SCREEN TO BACK SCREEN:
 ; Errr, guess what this routine does!
@@ -173,6 +176,7 @@ j	set		j+80					; Go to line below
 	dbf	d0,.bomb
 	rts
 
+	data
 * Here's the bitmap for the bomb- copied out of a TOS source listing in ST Internals!
 bmp_bomb:
 	dc.w	%0000011000000000
@@ -191,6 +195,8 @@ bmp_bomb:
 	dc.w	%0000011111111100
 	dc.w	%0000001111111000
 	dc.w	%0000000011100000
+
+	text
 
 * PLOT BITMAP ANIMATION FRAME:
 ; Plots a 192x288 bitmap to a screen buffer.
@@ -265,12 +271,16 @@ i 	set 	i+80				; Go to next line on screen buffer
 	movem.l	(a7)+,d0-d7/a0-a6
 	rts
 
+	data
+
 * Here's the 32x16 font- If want to see the source for this, 
 ; look in the "Air Dirt" source code under "SRC_DATA/GFX/FONT.PC1".
 ; (Obviously you'll need Degas or PC1 compatible software to view it!)
 main_font:
 	incbin 	graphics/bitmaps/crapfont.dat
 	even
+
+	text
 
 * CLEAR SCREEN TO BLACK:
 ; a0 = Address of screen buffer
@@ -358,10 +368,16 @@ old_screen_ptr:	ds.l	1
 oldvbl:			ds.l	1
 old_vidaddr:	ds.l	1 
 
+* Main screen buffers, used for "front" and "back" screens.
 				ds.b 	256
 screen1:		ds.b	32000
 				ds.b 	256
 screen2:		ds.b	32000
 				ds.b 	256
+* Additional screen buffer for "Doctor Who" and "Tri-di Donut" screens.
 screen3:		ds.b	32000
 screen3_end:	ds.l	40
+* Additional screen buffers for "Doctor Who" and "Credits" screens.
+screen4:		ds.b	32066
+screen5:		ds.b	32066
+

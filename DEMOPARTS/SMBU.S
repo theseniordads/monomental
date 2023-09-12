@@ -1,3 +1,5 @@
+	text
+
 * "PRODIGY TRIBUTE" aka "SMACK MY BITCH UP" SCREEN:
 ; This just displays a picture, and displays some timed text.
 smack_my_bitch_up:
@@ -37,6 +39,8 @@ smack_my_bitch_up:
 	set_clicks	#10
 	wait_until_end_clicks
 	rts
+
+	data
 
 pic_smack_my_bitch_up:
 	incbin graphics/packed/dog_smbu.pi3					; "SMBU" PI3 (packed)

@@ -1,3 +1,4 @@
+	text
 
 * "SENIOR DADS PRESENT..." screen
 ; Not much to this one, just show the picture and play the fanfare.

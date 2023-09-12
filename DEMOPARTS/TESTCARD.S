@@ -1,3 +1,4 @@
+	text
 
 * "TEST CARD" SCREEN:
 ; This displays the "a NEW demo" titles on a third screen to the user,
@@ -54,6 +55,8 @@ test_card:
 	jsr		stop_music
 	rts
 
+	data
+
 txt_new_demo:
 	dc.b '... a n3w d$mo! 1', 0
 
@@ -62,6 +65,8 @@ txt_do_you_remember:
 	dc.b '  remember', 13
 	dc.b ' old telly?'
 	even
+
+	text
 
 create_tv_static:
 	move	#16000-1,d7
