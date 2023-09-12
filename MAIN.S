@@ -9,9 +9,12 @@
 * The source and data has been reverse engineered from the original executable,
 * using a disassembler, various Atari rippers, MONST2, Steven Tattersall's HRDB,
 * and Visual Studio Code along with VASM and Vlink to recreate the executable on
-* modern systems. The aim is to make the compiled executable as close to the
-* original as possible (Though it might not be 100%). For more details on how 
-* this was done, see the DOCS/README.md file.
+* modern systems. 
+
+* The is the "Remix" version, which took the sources created by the "Remastered" version,
+* fixed issues with the timing of sections with music, cleaned up the exit code if your
+* not running on a monochrome monitor, and further optimised and reduced the memory footprint.
+* For more details on how this was done, see the DOCS/README.md file.
 
 * As this is not the original source, you can safetly assume all comments here are new.
 
