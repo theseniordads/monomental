@@ -38,7 +38,7 @@ To turn the compiled binary to an Atari executable:
 
 * `MAIN.S` - Main source code file. Assemble this to create the demo.
 * `COMPILED` - Compiled versions of the demo.
-  * `ORIGINAL` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
+  * `ORIGINAL` - Original compiled demo and accompanying [README](https://github.com/theseniordads/monomental/blob/main/COMPILED/ORIGINAL/MONOMNTL.TXT).
   * `REMASTER` - Compiled version of the demo from the reverse-engineered source code.
   * `REMIX` - Compiled version of the demo from a tweaked version of reverse-engineered source code.
 * `GRAPHICS` 

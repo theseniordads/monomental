@@ -10,7 +10,7 @@ The demo requires and Atari STFM or later with TOS 1.04 minumum, and **hi-res mo
 The original 11th April 1998 version of the demo, released at [the very first ALT party](https://www.altparty.org/2008/the-first-alternative-party.html) in Turku, Finland. 
 
 ### `REMASTER`
-The compiled version of the demo from the reverse-engineered source code. This version is designed to be as close to the original version as possible. (Although it's not 100% identical.) For more details on the reverse-engineering process, see [here](https://github.com/theseniordads/monomental/blob/remaster/DOCS/README.md).
+The compiled version of the demo from the reverse-engineered source code. This version is designed to be as close to the original version as possible. (Although it's not 100% identical.) For more details on the reverse-engineering process, see [here](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
 
 ### `REMIX` aka "The Director's Cut"
 A tweaked version of the "remastered" version. The contains the following differences to the original and "remastered" versions:
