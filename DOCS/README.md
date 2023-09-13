@@ -306,7 +306,7 @@ We hope you've enjoyed this epic journey as much as we have! (For at least some 
 
 **SENIOR DADS RULEC!!!**
 
-*2023-09-12*
+*Ended: 2023-09-12*
 
 *Shout out to:*
 * Steven Tattersall- Great to see you on GitHub, and [HRDB](https://github.com/tattlemuss/hatari) is a quality tool!
