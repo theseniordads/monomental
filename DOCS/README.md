@@ -302,8 +302,12 @@ And that is finally that: we've finally got a source code version of "Mono Menta
 5. Even with good disassemblers like TT Digger, there will be a lot of crap code left over from the disassembly process, so be prepared to do a lot of cleaning up! This will probably be the most time consuming part of the process.
 5. As well as modern tools, you'll be using a lot of old tools on the Atari platform, so take advantage of the fact that can spin up multiple instances of Hatari in different modes for different tools, thus enabling you do to some multitasking!
 
-We hope you've enjoyed this epic journey as much as we have! (For at least some of time!) We're not sure what we'll be doing next, but we'll need a lie and some Horlicks first!
+We hope you've enjoyed this epic journey as much as we have! (For at least some of time!) We're not sure what we'll be doing next, but we'll need a lie down and some Horlicks first!
 
 **SENIOR DADS RULEC!!!**
 
 *2023-09-12*
+
+*Shout out to:*
+* Steven Tattersall- Great to see you on GitHub, and [HRDB](https://github.com/tattlemuss/hatari) is a quality tool!
+* Sync- Just saw your entry [*Monism*](https://demozoo.org/productions/325847/) for Sommarhack 2023! Nice one! Amazing to see that 25 years after "Mono Mental", there's a [competition category](https://demozoo.org/parties/4490/#competition_18015) for mono demos!
