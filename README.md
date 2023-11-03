@@ -2,7 +2,7 @@
 
 Full assembler source for the "Mono-mental" demo by The Senior Dads, which was released on the Atari 16 bit platform on the 11th April 1998 at the first ALT Party in Turku, Finland.
 
-This release is different to other demo source code releases from us in that it's not the original source, (which is lost), but a reverse-engineer of the source code from the original binary. The original binary was disassembled and the source code was re-created from the disassembly. The original graphics and sound were also re-created from the binary. You can find out more about how this was done [here](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
+This release is different to other demo source code releases from us in that it's not the original source, (which is lost), but a reverse-engineer of the source code from the original binary. The original binary was disassembled and the source code was re-created from the disassembly. The original graphics and sound were also re-created from the binary. You can find out more about how this was done [here](https://github.com/theseniordads/monomental/blob/remix/DOCS/README.md).
 
 ## Specifications
 
@@ -36,8 +36,9 @@ To turn the compiled binary to an Atari executable:
 
 * `MAIN.S` - Main source code file. Assemble this to create the demo.
 * `COMPILED` - Compiled versions of the demo.
-  * `ORIGINAL` - Original compiled demo and accompanying [README](https://github.com/theseniordads/stfloormat/blob/main/COMPILED/MONOMNTL.TXT).
+  * `ORIGINAL` - Original compiled demo and accompanying [README](https://github.com/theseniordads/monomental/blob/remix/COMPILED/ORIGINAL/MONOMNTL.TXT).
   * `REMASTER` - Compiled version of the demo from the reverse-engineered source code.
+  * `REMIX` - Tweaked version of the demo with some minor fixes and improvements.
 * `GRAPHICS` 
   * `BITMAPS`- Despite the name, these are uncompressed Degas Elite PI3 images. They're just *used* like bitmaps.
   * `PACKED`- Degas Elite PI3 images packed with Atomix v3.5 packer. Used by the code.
