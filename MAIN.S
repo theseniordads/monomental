@@ -24,8 +24,6 @@
  * Exectuable format: Atari TOS .PRG
  * Minimum hardware: Atari STFM with 1MB RAM, **MONOCHROME** monitor only.
 
- ****** NOTE: WE'RE STILL WORKING ON THIS! ******
-
 FINAL_VERSION							; < Comment for labels and faster assembly
 
  	IFD	FINAL_VERSION
@@ -37,6 +35,22 @@ FINAL_VERSION							; < Comment for labels and faster assembly
 
 	text
 
+		jmp		start
+
+		; Little message for all the code rippers!
+		dc.b	'Wot!!!! Even in 2023, with us giving you the flipping source code of this cool demo '
+		dc.b	'on GitHub, you''re still ripping stuff out of the executable??!! Well, more fool you!!!! '
+		dc.b	'Apart from you missing out on all the cool comments in our code, our patented "DadGIT" AI '
+		dc.b	'technology has by this time determined who you are, and is currently in the process of '
+		dc.b 	'taking over your Twitter account, and all of your followers, and is getting ready to start '
+		dc.b 	'posting from those accounts, calling Elton Musk a twat in reply to each time he posts a '
+		dc.b	'tweet with the word "interesting" in it!!! '
+		dc.b	'The only way you can stop this social media calamity happening within the next hour is to '
+		dc.b	'tweet 42 consecutive tweets, all of which must contain the following words: '
+		dc.b	'"SORRY, SENIOR, DADS, ARE, THE, MEGAMIGHTY, FLIPPING, BEST"!!!!!'
+		even
+
+start:	
 	init_prog	normal_exit	; This macro executes the following code as a subroutine in supervisor mode, and sets up a custom stack at 'new_stack'.
 
 	* DEMOHUB!!!!!
@@ -92,7 +106,7 @@ init:
 	getrez_st 	d7					; <- Get ST Resolution
 	cmp.b	#2,d7					; <- If it's not 2 (hi-res)...
 	bne		hi_res_you_wally		; <- ...then show a little message!
-	move.l	$45e.w,old_screen_ptr	; Not sure why we saved this, as we don't change it!
+	;move.l	$45e.w,old_screen_ptr	; Not sure why we saved this, as we don't change it!
 	move.l	vbl.w,oldvbl			; Save the old VBL vector
 	move.l	#myvbl,vbl.w			; ... and slot in a "timer only" VBL
 	bsr		senior_text_intro
@@ -107,7 +121,7 @@ init:
 	jsr		swap_screens			; Swap screens (Thus displaying the former back screen, which is now black)
 	wait_vbl						; Not sure why we're wait for a VBL here!
 	jsr		invert_stuffs
-	sf		do_not_restart_music		; Tell the opening titles we need to start the music. (We explain that in that section!)
+	sf		do_not_restart_music		; Tell the opening titles we need to start the music. (We explain that in that subroutine!)
 	rts
 
 * RESTORE SYSTEM STUFF:
@@ -117,7 +131,7 @@ ret:
 	jsr		stop_music				; Stop the crash music
 	set_vidaddr	old_vidaddr			; Restore the old video address
 	move.l	oldvbl,vbl.w			; Restore the old VBL vector
-	move.l	old_screen_ptr,$45e.w	; Restore the old screen pointer, even though we haven't changed it!
+	;move.l	old_screen_ptr,$45e.w	; Restore the old screen pointer, even though we haven't changed it!
 	rts
 
 * MESSAGE IF DEMO IS NOT RUN ON A MONOCHROME MONITOR:
@@ -292,7 +306,7 @@ black_screen:
 	move	#(32000/4)-1,d1		; Blat the whole screen buffer with black!
 .loop:
 	move.l	d0,(a0)+
-	dbf	d1,.loop
+	dbf		d1,.loop
 	rts
 
 * SWAP SCREENS AND DISPLAY CURRENT FRONT SCREEN:
@@ -306,8 +320,8 @@ swap_screens:
 * SORT SCREEN POINTERS:
 ; This sorts the screen pointers so that the front screen pointers points to the screen buffer
 ; with the lower address compared to the pointer to the back screen. This was only used in the
-; "Tri-di Donut" screen, as we had to some sorting of the pointers in order to the hardware
-; scrolling effects on the donut to work. We porbably kept it seperate just in case we needed
+; "Tri-di Donut" screen, as we had to some sorting of the pointers in order for the hardware
+; scrolling effects on the donut to work. We probably kept it seperate just in case we needed
 ; it again.
 sort_screen_pointers:
 	movem.l	front,d0-d1
@@ -372,7 +386,7 @@ oldvbl:			ds.l	1
 old_vidaddr:	ds.l	1 
 
 * Main screen buffers, used for "front" and "back" screens.
-				ds.b 	256
+				ds.b 	256+34
 screen1:		ds.b	32000
 				ds.b 	256
 screen2:		ds.b	32000

@@ -2,7 +2,7 @@
 
 * "GREETINGS" SCREEN:
 ; This follows the template set by "Xmas Card '97", and plonks on the crews we're greeting in a 
-; seemingly random fashion. In the case, the graphics are a reference to the cover of The Chemical
+; seemingly random fashion. In this case, the graphics are a reference to the cover of The Chemical
 ; Brothers (then new) album "Dig Your Own Hole".
 greetings:
 	set_clicks	#620-1							; If you're wondering about the large value, this how long the *whole* screen goes on for!
