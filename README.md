@@ -45,7 +45,7 @@ To turn the compiled binary to an Atari executable:
   * `SENIOR_L.OGO` - The Senior Dads logo in ASCII text. Designed for use in ST Med or Hi resoloution.
 * `DEMOPARTS` - Inidividual parts of the demo, used by `MAIN.S`.
 * `DISASSEMB/MONOMNTL.S` - Disassembly of the original binary using TT-Digger. This is what we started out with!
-* `DOCS/README.md` - [How we reverse-engineered the demo](https://github.com/theseniordads/monomental/blob/main/DOCS/README.md).
+* `DOCS/README.md` - [How we reverse-engineered the demo](https://github.com/theseniordads/monomental/blob/remix/DOCS/README.md).
 * `INCLUDES` - Various macro and helpers code.
 * `OLD` - Earlier incomplete version of the demo. Note that the source code has **not** been checked for VASM compatiblity, and is designed to be compiled in Devpac 3 on an Atari system.
 
