@@ -1,1 +1,6 @@
 build/*
+video/monomental/mono_assets/*
+video/monomental/output/*
+video/monomental/src/mono_mental.mp4
+video/monomental_in_colour/mono_colour_assets/*
+video/monomental_in_colour/output/*
