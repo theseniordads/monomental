@@ -4,9 +4,8 @@ This section contains the videos of "Mono Mental" for the [Senior Dads Youtube C
 
 ## Video projects
 
-* `monomental` -Original "Mono Mental" capture from the remix version of the demo running in Hatari as a 0.5MB Atari STFM on a monochrome display.
-
-Projects use [Open Shot video editor](https://www.openshot.org/) v3.1.
+* `monomental` - Original "Mono Mental" capture from the remix version of the demo running in Hatari as a 0.5MB Atari STFM on a monochrome display. Project uses [Open Shot video editor](https://www.openshot.org/) v3.1.
+* `monomental_in_colour` - "Mono Mental" capture converted to colour. Project uses [Davinci Resolve 16](https://www.blackmagicdesign.com/products/davinciresolve) 16. Import the project file in the folder `project`. You may need to specifiy the locations of the source files. These are in the `src` folder.
 
 ### Extracting source video capture
 
